@@ -1,4 +1,4 @@
-# Logs
+## Logs ##
 logs
 *.log
 npm-debug.log*
@@ -7,18 +7,41 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+## VisualStudioCode & Others ##
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/*.code-snippets
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+## react ##
+.DS_*
+**/*.backup.*
+**/*.back.*
+node_modules
+bower_components
+*.sublime*
+dist
+dist-ssr
+*.local
+psd
+thumb
+sketch
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
