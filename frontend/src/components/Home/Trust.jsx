@@ -1,10 +1,10 @@
-import SmartFinder from "../assets/confidence/smartfinder.png";
-import Zoomer from "../assets/confidence/zoomer.png";
-import Shells from "../assets/confidence/shells.png";
-import Waves from "../assets/confidence/waves.png";
-import Artvenue from "../assets/confidence/artevnue.png";
+import SmartFinder from "../../assets/confidence/smartfinder.png";
+import Zoomer from "../../assets/confidence/zoomer.png";
+import Shells from "../../assets/confidence/shells.png";
+import Waves from "../../assets/confidence/waves.png";
+import Artvenue from "../../assets/confidence/artevnue.png";
 
-function HomeTrust() {
+function Trust() {
   return (
     <section class="my-[80px] flex flex-col items-center justify-center text-center">
       <h2 class="text-3xl font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
@@ -46,4 +46,4 @@ function HomeTrust() {
   );
 }
 
-export default HomeTrust;
+export default Trust;

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-import imageSection1 from "../assets/Section1Image.png";
+import imageSection1 from "../../assets/Section1Image.png";
 
-function HomeExploreWeb() {
+function ExploreWeb() {
   return (
     <section class="my-[80px] flex flex-col items-center justify-center text-center">
       <h1 class="text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
@@ -41,4 +41,4 @@ function HomeExploreWeb() {
   );
 }
 
-export default HomeExploreWeb;
+export default ExploreWeb;

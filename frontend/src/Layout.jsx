@@ -7,7 +7,7 @@ function Layout() {
   return (
     <div class="bg-layout-bg font-roboto flex min-h-screen flex-col items-center text-white">
       <Header />
-      <main class="my-24">
+      <main class="my-10">
         <Outlet />
       </main>
       <Footer />
