@@ -38,9 +38,9 @@ function Header() {
           onClick={() => setMenuOpen((prev) => !prev)}
         >
           {menuOpen ? (
-            <X size={44} className="bg-secondary rounded-lg p-1" />
+            <X size={44} className="bg-main-text rounded-lg p-1" />
           ) : (
-            <Menu size={44} className="bg-secondary rounded-lg p-1" />
+            <Menu size={44} className="bg-main-text rounded-lg p-1" />
           )}
         </button>
       </div>
