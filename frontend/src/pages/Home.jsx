@@ -1,4 +1,5 @@
 import HomeExploreWeb from "../components/HomeExploreWeb";
+import HomeLearn from "../components/HomeLearn";
 import HomeTrust from "../components/HomeTrust";
 
 function Home() {
@@ -6,6 +7,7 @@ function Home() {
     <div>
       <HomeExploreWeb />
       <HomeTrust />
+      <HomeLearn />
     </div>
   );
 }
