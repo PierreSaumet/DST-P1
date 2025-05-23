@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 
 function Layout() {
   return (
-    <div class="min-h-screen flex flex-col items-center font-roboto bg-layout-bg text-white ">
+    <div class="bg-layout-bg font-roboto flex min-h-screen flex-col items-center text-white">
       <Header />
       <main>
         <Outlet />
@@ -13,6 +13,6 @@ function Layout() {
       <Footer />
     </div>
   );
-};
+}
 
 export default Layout;
