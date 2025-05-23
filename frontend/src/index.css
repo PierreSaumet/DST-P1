@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --color-layout-bg: #0F172A; /* used in background */
+  --color-main-text: #9333EA; /* purple */
+  --color-header-bg: #131b2e; /* dark blue, used for header*/
+  --color-blue-gray: #94A3B8;
+  --font-roboto: "Roboto", sans-serif; 
+}
