@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 
 function Layout() {
   return (
-    <div class="min-h-screen bg-layout-bg text-white font-roboto flex flex-col items-center">
+    <div class="min-h-screen flex flex-col items-center font-roboto bg-layout-bg text-white ">
       <Header />
       <main>
         <Outlet />
