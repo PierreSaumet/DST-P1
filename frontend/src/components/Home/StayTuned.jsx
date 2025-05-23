@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 import { ArrowRight } from "lucide-react";
 
-import Shapes from "../assets/Shapes.png";
+import Shapes from "../../assets/Shapes.png";
 
-function HomeStayTuned() {
+function StayTuned() {
   return (
     <section class="my-[80px] flex flex-col items-center justify-center px-20 lg:mx-20 xl:flex-row">
       <img
@@ -38,4 +38,4 @@ function HomeStayTuned() {
   );
 }
 
-export default HomeStayTuned;
+export default StayTuned;

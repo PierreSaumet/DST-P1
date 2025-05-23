@@ -1,15 +1,15 @@
-import HomeExploreWeb from "../components/HomeExploreWeb";
-import HomeLearn from "../components/HomeLearn";
-import HomeStayTuned from "../components/HomeStayTuned";
-import HomeTrust from "../components/HomeTrust";
+import ExploreWeb from "../components/Home/ExploreWeb";
+import Learn from "../components/Home/Learn";
+import StayTuned from "../components/Home/StayTuned";
+import Trust from "../components/Home/Trust";
 
 function Home() {
   return (
     <div>
-      <HomeExploreWeb />
-      <HomeTrust />
-      <HomeLearn />
-      <HomeStayTuned />
+      <ExploreWeb />
+      <Trust />
+      <Learn />
+      <StayTuned />
     </div>
   );
 }

@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 import { ArrowRight } from "lucide-react";
 
-import imageSection1 from "../assets/Section1Image.png";
+import imageSection1 from "../../assets/Section1Image.png";
 
-function HomeLearn() {
+function Learn() {
   return (
     <section class="my-[80px] flex flex-col items-center justify-center px-20 lg:mx-20 xl:flex-row">
       <div class="flex flex-col text-center xl:text-start">
@@ -37,4 +37,4 @@ function HomeLearn() {
   );
 }
 
-export default HomeLearn;
+export default Learn;
