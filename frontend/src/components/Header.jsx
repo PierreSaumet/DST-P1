@@ -1,9 +1,86 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div>
-      Header
-    </div>
+    <nav className="bg-header-bg z-50 mx-auto mt-10 h-20 w-full max-w-5xl rounded-xl px-4 py-2 shadow-md">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
+          {" "}
+          {/* Left Part   */}
+          <Link to="/" className="my-3 text-3xl font-bold md:my-0">
+            WEEB
+          </Link>
+          <Link
+            to="/contact"
+            className="hidden items-center p-4 text-xl font-medium md:flex"
+          >
+            Contact
+          </Link>
+        </div>
+
+        <div className="hidden items-center md:flex">
+          {" "}
+          {/* Right Part */}
+          <Link to="/login" className="mx-4 text-base">
+            Se connecter
+          </Link>
+          <button className="bg-main-text mx-4 rounded-lg px-4 py-2 text-white">
+            S'inscrire
+          </button>
+        </div>
+
+        <button
+          className="md:hidden"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
+          {menuOpen ? (
+            <X size={44} className="bg-secondary rounded-lg p-1" />
+          ) : (
+            <Menu size={44} className="bg-secondary rounded-lg p-1" />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="bg-opacity-50 inset-0 top-4 z-10"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          <div className="bg-header-bg sticky right-0 left-0 z-20 flex flex-col rounded-xl p-4 text-center md:hidden">
+            {" "}
+            <Link
+              to="/contact"
+              className="px-4 py-2 text-lg"
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact
+            </Link>
+            <Link
+              to="/login"
+              className="px-4 py-2 text-lg"
+              onClick={() => setMenuOpen(false)}
+            >
+              Se connecter
+            </Link>
+            <button
+              className="bg-main-text cursor-pointer rounded-lg px-4 py-2 text-lg text-white"
+              onClick={() => setMenuOpen(false)}
+            >
+              S'inscrire
+            </button>
+          </div>
+        </>
+      )}
+    </nav>
   );
-};
+}
 
 export default Header;
