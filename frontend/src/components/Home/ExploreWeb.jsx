@@ -21,11 +21,14 @@ function ExploreWeb() {
       </p>
 
       <div class="flex flex-col content-center justify-center md:flex-row">
-        <Link class="bg-main-text border-main-text mx-4 mb-4 rounded-lg border p-3 md:mb-0">
+        <Link
+          to="/"
+          class="bg-main-text border-main-text mx-4 mb-4 transform rounded-lg border p-3 transition duration-300 ease-in-out hover:scale-110 md:mb-0"
+        >
           Découvrir les articles
         </Link>
 
-        <Link class="mx-4 rounded-lg border border-white p-3">
+        <Link class="mx-4 transform rounded-lg border border-white p-3 transition duration-300 ease-in-out hover:scale-110">
           S'abonner à la newsletter
         </Link>
       </div>
