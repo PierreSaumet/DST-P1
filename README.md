@@ -43,10 +43,11 @@ A simply web project with few pages for now.
 
 ## Documentation
 react = https://react.dev/
+
 tailwind = https://tailwindcss.com/
+
 lucide-react = https://lucide.dev/guide/packages/lucide-react
+
 prettier = https://prettier.io/docs/configuration
-
-
 
 
