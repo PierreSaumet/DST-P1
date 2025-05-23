@@ -25,7 +25,7 @@ function Form() {
         </div>
       </div>
 
-      <button className="bg-main-text my-10 rounded-lg px-8 py-4 text-base font-medium text-white">
+      <button className="bg-main-text my-10 transform rounded-lg px-8 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:scale-110">
         Se connecter
       </button>
     </form>

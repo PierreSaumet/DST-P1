@@ -7,7 +7,7 @@ import Artvenue from "../../assets/confidence/artevnue.png";
 function Trust() {
   return (
     <section class="my-[80px] flex flex-col items-center justify-center text-center">
-      <h2 class="text-3xl font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
+      <h2 class="mx-2 text-3xl font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
         Ils nous font confiance
       </h2>
 

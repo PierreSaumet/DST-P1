@@ -28,7 +28,7 @@ function Header() {
           <Link to="/login" className="mx-4 text-base">
             Se connecter
           </Link>
-          <button className="bg-main-text mx-4 rounded-lg px-4 py-2 text-white">
+          <button className="bg-main-text mx-4 transform rounded-lg px-4 py-2 text-white transition duration-300 ease-in-out hover:scale-110">
             S'inscrire
           </button>
         </div>
