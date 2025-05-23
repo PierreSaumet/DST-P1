@@ -1,14 +1,35 @@
 import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Layout from "./Layout";
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+
+// Define children routes
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+    ],
+  },
+]);
 
 function App() {
-
-  return (
-    <>
-      <div>
-        <h1 className='text-red-400'>Test tailwind</h1>
-      </div>
-    </>
-  )
+  return <RouterProvider router={router} />
 }
 
-export default App
+export default App;
