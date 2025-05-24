@@ -41,14 +41,14 @@ function Footer() {
         </div>
       </div>
 
-      <div class="mt-2 flex flex-col items-center border-t py-15 md:flex-row md:justify-between">
+      <div class="border-footer-border mt-2 flex flex-col items-center border-t py-15 md:flex-row md:justify-between">
         <h2 class="">@ 2025 Weeb, Inc. All rights reserved.</h2>
         <div class="my-5 flex flex-row px-1 lg:my-0">
-          <Youtube size={24} class="mx-0 lg:mx-2" />
-          <Facebook size={24} class="mx-0 lg:mx-2" />
-          <Twitter size={24} class="mx-0 lg:mx-2" />
-          <Instagram size={24} class="mx-0 lg:mx-2" />
-          <Linkedin size={24} class="mx-0 lg:mx-2" />
+          <Youtube size={24} class="mx-1 lg:mx-2" />
+          <Facebook size={24} class="mx-1 lg:mx-2" />
+          <Twitter size={24} class="mx-1 lg:mx-2" />
+          <Instagram size={24} class="mx-1 lg:mx-2" />
+          <Linkedin size={24} class="mx-1 lg:mx-2" />
         </div>
       </div>
     </div>
