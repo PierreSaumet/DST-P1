@@ -6,7 +6,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-header-bg z-50 mx-auto mt-10 h-20 w-full max-w-5xl rounded-xl px-4 py-2 shadow-md">
+    <nav className="bg-header-bg fixed z-50 mx-auto h-20 w-full max-w-5xl rounded-xl px-4 py-2 shadow-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-between">
           {" "}
@@ -50,7 +50,7 @@ function Header() {
         <>
           {/* Overlay */}
           <div
-            className="bg-opacity-50 inset-0 top-4 z-10"
+            className="bg-opacity-50 bg-header-bg fixed inset-0 top-20 z-10 min-h-full"
             onClick={() => setMenuOpen(false)}
           />
 
