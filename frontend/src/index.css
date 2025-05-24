@@ -4,6 +4,7 @@
   --color-layout-bg: #0F172A; /* used in background */
   --color-main-text: #9333EA; /* purple */
   --color-header-bg: #131b2e; /* dark blue, used for header*/
+  --color-footer-border: #CBD5E1;
   --color-blue-gray: #94A3B8;
   --color-white-gray: #C4C4C4; /* used for login page */
   --font-roboto: "Roboto", sans-serif; 
