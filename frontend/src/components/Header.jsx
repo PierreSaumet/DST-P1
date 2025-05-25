@@ -16,7 +16,7 @@ function Header() {
           </Link>
           <Link
             to="/contact"
-            className="hidden items-center p-4 text-xl font-medium md:flex"
+            className="hover:text-main-text hidden items-center p-4 text-xl font-medium md:flex"
           >
             Contact
           </Link>
@@ -25,7 +25,7 @@ function Header() {
         <div className="hidden items-center md:flex">
           {" "}
           {/* Right Part */}
-          <Link to="/login" className="mx-4 text-base">
+          <Link to="/login" className="hover:text-main-text mx-4 text-base">
             Se connecter
           </Link>
           <button className="bg-main-text mx-4 transform rounded-lg px-4 py-2 text-white transition duration-300 ease-in-out hover:scale-110">

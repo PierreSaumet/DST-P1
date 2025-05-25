@@ -13,31 +13,63 @@ function Footer() {
 
         <div class="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 class="text-blue-gray my-5 font-medium">PRODUCT</h2>
-          <Link class="my-3">Pricing</Link>
-          <Link class="my-3">Overview</Link>
-          <Link class="my-3">Browse</Link>
-          <Link class="my-3">Accessibility</Link>
-          <Link class="my-3">Five</Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Pricing
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Overview
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Browse
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Accessibility
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Five
+          </Link>
         </div>
         <div class="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 class="text-blue-gray my-5 font-medium">SOLUTIONS</h2>
-          <Link class="my-3">Brainstorming</Link>
-          <Link class="my-3">Ideation</Link>
-          <Link class="my-3">Wireframing</Link>
-          <Link class="my-3">Research</Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Brainstorming
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Ideation
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Wireframing
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Research
+          </Link>
         </div>
         <div class="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 class="text-blue-gray my-5 font-medium">RESSOURCES</h2>
-          <Link class="my-3">Help Center</Link>
-          <Link class="my-3">Blog</Link>
-          <Link class="my-3">Tutorials</Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Help Center
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Blog
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Tutorials
+          </Link>
         </div>
         <div class="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 class="text-blue-gray my-5 font-medium">COMPANY</h2>
-          <Link class="my-3">About</Link>
-          <Link class="my-3">Press</Link>
-          <Link class="my-3">Events</Link>
-          <Link class="my-3">Careers</Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            About
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Press
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Events
+          </Link>
+          <Link class="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+            Careers
+          </Link>
         </div>
       </div>
 

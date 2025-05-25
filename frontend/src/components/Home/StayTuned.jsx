@@ -29,7 +29,7 @@ function StayTuned() {
           Ne manquez aucune actualité du digital !
         </p>
 
-        <Link class="justify-content mx-auto flex items-center text-xl font-medium xl:mx-0">
+        <Link class="justify-content hover:text-main-text mx-auto flex items-center text-xl font-medium xl:mx-0">
           Lire les articles récents
           <ArrowRight size={24} class="mx-4" />
         </Link>
