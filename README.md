@@ -25,7 +25,7 @@ A simply web project with few pages for now.
     cd <NAME_FOLDER>
 ```
 
-3. Go inside fronted folder.
+3. Go inside frontend folder.
 ```bash
     cd frontend
 ```
