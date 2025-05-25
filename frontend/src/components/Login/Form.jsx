@@ -1,7 +1,7 @@
 function Form() {
   return (
-    <form class="mx-4 w-64 max-w-3xl rounded-xl sm:w-auto">
-      <div class="mt-5 flex flex-col items-center justify-center md:flex-row">
+    <form className="mx-4 w-64 max-w-3xl rounded-xl sm:w-auto">
+      <div className="mt-5 flex flex-col items-center justify-center md:flex-row">
         {/* Email */}
         <div className="mx-1 my-5 max-w-80 px-5 md:mx-10 md:my-0 md:px-0">
           <input

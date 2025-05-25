@@ -1,7 +1,7 @@
 function ContactForm() {
   return (
-    <form class="border-main-text mx-4 w-64 max-w-3xl rounded-xl border sm:w-auto">
-      <div class="mt-5 flex flex-col items-center justify-center md:flex-row">
+    <form className="border-main-text mx-4 w-64 max-w-3xl rounded-xl border sm:w-auto">
+      <div className="mt-5 flex flex-col items-center justify-center md:flex-row">
         {/* LastName / Nom */}
         <div className="mx-1 my-5 max-w-80 px-5 md:mx-10 md:my-0 md:px-0">
           <input
@@ -24,7 +24,7 @@ function ContactForm() {
           />
         </div>
       </div>
-      <div class="flex flex-col items-center justify-center md:mt-5 md:flex-row">
+      <div className="flex flex-col items-center justify-center md:mt-5 md:flex-row">
         {/* Other / Autre */}
         <div className="mx-1 my-5 max-w-80 px-5 md:mx-10 md:my-0 md:px-0">
           <input
@@ -49,7 +49,7 @@ function ContactForm() {
       </div>
 
       {/* Message */}
-      <div class="flex flex-col items-center justify-center md:mt-5 md:flex-row">
+      <div className="flex flex-col items-center justify-center md:mt-5 md:flex-row">
         <div className="my-5 flex-auto px-5 md:mx-10 md:my-0 md:px-0">
           <input
             type="text"
