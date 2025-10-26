@@ -5,6 +5,10 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
+import Profile from "./pages/Profile";
+import Signup from "./pages/Signup";
+import Articles from "./pages/Articles";
+import ArticleDetail from "./pages/ArticleDetail";
 
 // Define children routes
 const router = createBrowserRouter([
@@ -24,6 +28,22 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+      {
+        path: "articles",
+        element: <Articles />,
+      },
+      {
+        path: "articles/:id",
+        element: <ArticleDetail />,
       },
     ],
   },

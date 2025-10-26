@@ -20,6 +20,18 @@ function Header() {
           >
             Contact
           </Link>
+          <Link
+            to="/profile"
+            className="hover:text-main-text hidden items-center p-4 text-xl font-medium md:flex"
+          >
+            Profile
+          </Link>
+          <Link
+            to="/articles"
+            className="hover:text-main-text hidden items-center p-4 text-xl font-medium md:flex"
+          >
+            Articles
+          </Link>
         </div>
 
         <div className="hidden items-center md:flex">
@@ -28,9 +40,12 @@ function Header() {
           <Link to="/login" className="hover:text-main-text mx-4 text-base">
             Se connecter
           </Link>
-          <button className="bg-main-text mx-4 transform rounded-lg px-4 py-2 text-white transition duration-300 ease-in-out hover:scale-110">
+          <Link
+            to="/signup"
+            className="bg-main-text mx-4 transform rounded-lg px-4 py-2 text-white transition duration-300 ease-in-out hover:scale-110"
+          >
             S'inscrire
-          </button>
+          </Link>
         </div>
 
         <button
@@ -64,18 +79,33 @@ function Header() {
               Contact
             </Link>
             <Link
+              to="/profile"
+              className="px-4 py-2 text-lg"
+              onClick={() => setMenuOpen(false)}
+            >
+              Profile
+            </Link>
+            <Link
+              to="/articles"
+              className="px-4 py-2 text-lg"
+              onClick={() => setMenuOpen(false)}
+            >
+              Articles
+            </Link>
+            <Link
               to="/login"
               className="px-4 py-2 text-lg"
               onClick={() => setMenuOpen(false)}
             >
               Se connecter
             </Link>
-            <button
-              className="bg-main-text cursor-pointer rounded-lg px-4 py-2 text-lg text-white"
+            <Link
+              to="/signup"
+              className="px-4 py-2 text-lg"
               onClick={() => setMenuOpen(false)}
             >
               S'inscrire
-            </button>
+            </Link>
           </div>
         </>
       )}
