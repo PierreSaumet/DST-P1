@@ -1,6 +1,8 @@
 import { useState } from "react";
+
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import ToggleMode from "./ToggleMode";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,8 +37,8 @@ function Header() {
         </div>
 
         <div className="hidden items-center md:flex">
-          {" "}
           {/* Right Part */}
+          <ToggleMode />
           <Link to="/login" className="hover:text-main-text mx-4 text-base">
             Se connecter
           </Link>

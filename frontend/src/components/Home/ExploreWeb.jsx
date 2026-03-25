@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import imageSection1 from "../../assets/Section1Image.png";
+import AnimatedText from "../MotionAnimation/AnimatedText";
 
 function ExploreWeb() {
   return (
@@ -13,11 +14,8 @@ function ExploreWeb() {
         ses <span className="decoration-main-text underline">facettes</span>
       </h1>
 
-      <p className="m-8 max-w-3xl text-base font-normal md:text-lg">
-        Le monde du web évolue constamment, et nous sommes là pour vous guider à
-        travers ses tendances, technologies et meilleures pratiques. Que vous
-        soyez développeur, designer ou passionné du digital, notre blog vous
-        offre du contenu de qualité pour rester à la pointe.
+      <p className="m-8 max-w-3xl font-normal md:text-lg">
+        <AnimatedText text="Le monde du web évolue constamment, et nous sommes là pour vous guider à travers ses tendances, technologies et meilleures pratiques. Que vous soyez développeur, designer ou passionné du digital, notre blog vous offre du contenu de qualité pour rester à la pointe." />
       </p>
 
       <div className="flex flex-col content-center justify-center md:flex-row">
@@ -28,7 +26,7 @@ function ExploreWeb() {
           Découvrir les articles
         </Link>
 
-        <Link className="mx-4 transform rounded-lg border border-white p-3 transition duration-300 ease-in-out hover:scale-110">
+        <Link className="mx-4 transform rounded-lg border border-black p-3 transition duration-300 ease-in-out hover:scale-110 dark:border-white">
           S'abonner à la newsletter
         </Link>
       </div>

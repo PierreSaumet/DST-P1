@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 import Shapes from "../../assets/Shapes.png";
+import AnimatedText from "../MotionAnimation/AnimatedText";
 
 function StayTuned() {
   return (
@@ -18,15 +19,13 @@ function StayTuned() {
           Le web, un écosystème en constante évolution
         </p>
 
-        <h2 className="mt-4 mb-8 text-4xl font-extrabold text-white sm:text-5xl md:text-6xl lg:text-7xl">
+        <h2 className="mt-4 mb-8 text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
           Restez informé des dernières{" "}
           <span className="text-main-text">tendances</span>
         </h2>
 
         <p className="mb-8 text-sm font-normal sm:text-base md:text-lg">
-          Chaque semaine, nous analysons les nouveautés du web : frameworks
-          émergents, bonnes pratiques SEO, accessibilité, et bien plus encore.
-          Ne manquez aucune actualité du digital !
+          <AnimatedText text="Chaque semaine, nous analysons les nouveautés du web : frameworks émergents, bonnes pratiques SEO, accessibilité, et bien plus encore. Ne manquez aucune actualité du digital !" />
         </p>
 
         <Link
