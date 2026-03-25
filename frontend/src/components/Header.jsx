@@ -108,6 +108,9 @@ function Header() {
             >
               S'inscrire
             </Link>
+            <div className="flex justify-center px-4 py-2">
+              <ToggleMode />
+            </div>
           </div>
         </>
       )}
