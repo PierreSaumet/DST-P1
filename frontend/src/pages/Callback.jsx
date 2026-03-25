@@ -4,7 +4,7 @@ import { useUser } from "../components/UserContext";
 
 function AuthCallback() {
   const navigate = useNavigate();
-  const { saveTokens, fetchUser } = useUser();
+  const { saveTokens } = useUser();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -12,22 +12,14 @@ function AuthCallback() {
     const refresh = params.get("refresh");
     const error = params.get("error");
 
-    console.log("params ", params);
-
-    console.log("access ", access);
-    console.log("refresh ", refresh);
-    console.log("error ", error);
-
     if (error) {
-      console.log("POURQUOU JE SUIS LA AAA ");
+      // USE ERROR
       navigate(`/login?error=${error}`);
       return;
     }
 
     if (access && refresh) {
       saveTokens(access, refresh);
-      // fetchUser(access);
-      console.log("BINGO");
       navigate("/profile");
     }
   }, []);

@@ -9,7 +9,7 @@ import axios from "axios";
 
 const UserContext = createContext();
 
-// Axios instance avec intercepteur pour le refresh automatique
+// Axios instance with interceptor for refresh
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("access_token"));
   const [loading, setLoading] = useState(false);
 
-  // Sauvegarde les tokens
+  // Save tokens
   const saveTokens = (accessToken, refreshToken) => {
     setToken(accessToken);
     localStorage.setItem("access_token", accessToken);
@@ -28,7 +28,7 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Vide tout
+  // Clear all
   const clearTokens = () => {
     setUser(null);
     setToken(null);
@@ -36,7 +36,7 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("refresh_token");
   };
 
-  // Tente de rafraîchir le access token via le refresh token
+  // Use refresh token to get new access token
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = localStorage.getItem("refresh_token");
     if (!refreshToken) {
@@ -52,7 +52,7 @@ export const UserProvider = ({ children }) => {
       saveTokens(newAccessToken, refreshToken);
       return newAccessToken;
     } catch (error) {
-      console.error("Refresh token expiré, déconnexion.", error);
+      console.error("Refresh token expired.", error);
       clearTokens();
       return null;
     }
@@ -70,13 +70,9 @@ export const UserProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${tokenToUse}` },
         });
 
-        console.log("PIERRE USER ", response.data);
         setUser(response.data);
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération de l'utilisateur:",
-          error,
-        );
+        console.error("Error while retrieving user:", error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -85,7 +81,7 @@ export const UserProvider = ({ children }) => {
     [token],
   );
 
-  // Intercepteur Axios : si 401, tente un refresh puis relance la requête
+  // Try refresh if get 401
   useEffect(() => {
     const interceptor = api.interceptors.response.use(
       (response) => response,
@@ -105,7 +101,7 @@ export const UserProvider = ({ children }) => {
     return () => api.interceptors.response.eject(interceptor);
   }, [refreshAccessToken]);
 
-  // Fetch user au chargement si un token existe
+  // If token exist try get user
   useEffect(() => {
     if (token) fetchUser(token);
   }, [token]);
@@ -121,7 +117,7 @@ export const UserProvider = ({ children }) => {
       await fetchUser(response.data.access);
       return true;
     } catch (error) {
-      console.error("Erreur de connexion:", error);
+      console.error("Error connection:", error);
       return false;
     }
   };
