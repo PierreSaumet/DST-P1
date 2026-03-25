@@ -9,6 +9,9 @@ import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
+import Test from "./pages/Test";
+// import AuthCallback from "./pages/Callback";
+import AuthCallback from "./pages/Callback";
 
 // Define children routes
 const router = createBrowserRouter([
@@ -44,6 +47,14 @@ const router = createBrowserRouter([
       {
         path: "articles/:id",
         element: <ArticleDetail />,
+      },
+      {
+        path: "test",
+        element: <Test />,
+      },
+      {
+        path: "auth/callback",
+        element: <AuthCallback />,
       },
     ],
   },

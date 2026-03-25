@@ -45,3 +45,10 @@ sketch
 # Ignore all local history of files
 .history
 .ionide
+
+# Environments
+env/
+venv/
+ENV/
+.venv/
+.env

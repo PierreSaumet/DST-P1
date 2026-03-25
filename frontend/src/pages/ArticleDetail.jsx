@@ -12,7 +12,7 @@ function ArticleDetail() {
     const fetchArticle = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/articles/${id}/`,
+          `${import.meta.env.VITE_API_URL}/articles/${id}/`,
         );
         setArticle(response.data);
       } catch (err) {

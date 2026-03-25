@@ -25,14 +25,14 @@ function ContactForm() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("access_token");
       if (!token) {
         setError("Vous devez vous identifiez");
         return;
       }
       setError("");
       const response = await axios.post(
-        "http://localhost:8000/api/satisfactions/",
+        `${import.meta.env.VITE_API_URL}/satisfactions/`,
         {
           email,
           first_name: firstName,

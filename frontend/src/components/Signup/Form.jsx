@@ -20,7 +20,7 @@ function FormSignUp() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/users/",
+        `${import.meta.env.VITE_API_URL}/users/`,
         { email, password, first_name: firstName, last_name: lastName },
         { headers: { "Content-Type": "application/json" } },
       );
@@ -53,7 +53,7 @@ function FormSignUp() {
       className="mx-4 w-64 max-w-3xl rounded-xl sm:w-auto"
     >
       {loading ? (
-        <div>Wating ...</div>
+        <div>Waiting ...</div>
       ) : (
         <div>
           {Object.keys(errors).length > 0 && (

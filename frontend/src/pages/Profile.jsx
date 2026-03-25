@@ -18,6 +18,7 @@ function Profile() {
       if (!user) {
         await fetchUser();
       }
+      console.log("laaaaaaaaaaa", user);
       setCheckedUser(true);
     };
 
@@ -37,7 +38,7 @@ function Profile() {
     setSuccess("");
     setError("");
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
     if (!token) {
       setError("Vous devez être connecté pour publier un article.");
       return;
@@ -45,7 +46,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/articles/",
+        `${import.meta.env.VITE_API_URL}/articles/`,
         { title, description, image },
         {
           headers: {
@@ -78,6 +79,7 @@ function Profile() {
         Profil de Prénom: {user.first_name} et Nom de Famille: {user.last_name}
       </h1>
       <p>Votre Email: {user.email}</p>
+      <p>Votre TESSSSSSSSSSSSSSSSSST: {user.is_active ? "oui" : "non"}</p>
 
       <div className="mt-10 w-full max-w-lg rounded-lg border border-gray-200 bg-gray-800 p-6 shadow-md">
         <h2 className="text-main-text mb-4 text-2xl font-semibold">

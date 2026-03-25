@@ -1,0 +1,96 @@
+function Test() {
+  const handleGithubLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github/`;
+  };
+
+  return (
+    <section className="mt-[60px] mb-[80px] flex flex-col items-center justify-center text-center">
+      <h1>TEST PAGE</h1>
+
+      <button
+        onClick={handleGithubLogin}
+        className="mt-6 rounded-lg bg-black px-6 py-3 text-white"
+      >
+        Se connecter avec GitHub
+      </button>
+    </section>
+  );
+}
+
+export default Test;
+
+/*
+
+
+
+
+
+asgiref==3.10.0
+black==25.9.0
+cfgv==3.4.0
+click==8.3.0
+coverage==7.11.0
+distlib==0.4.0
+dj-database-url==3.1.0
+Django==5.2.7
+django-cors-headers==4.9.0
+django-filter==25.2
+django-mysql==4.19.0
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1 
+filelock==3.20.0
+gunicorn==25.1.0
+identify==2.6.15
+isort==7.0.0
+mypy_extensions==1.1.0
+nodeenv==1.9.1
+packaging==25.0
+pathspec==0.12.1
+platformdirs==4.5.0
+pre_commit==4.3.0
+psycopg2-binary==2.9.11
+PyJWT==2.10.1 
+pytokens==0.2.0
+PyYAML==6.0.3
+sqlparse==0.5.3
+virtualenv==20.35.3
+mysqlclient==2.2.7
+whitenoise==6.11.0
+django-allauth==65.14.3
+dj-rest-auth==7.1.1
+
+# IA 
+joblib==1.5.2
+langdetect==1.0.9
+numpy==2.3.4
+pandas==2.3.3
+python-dateutil==2.9.0.post0
+pytz==2025.2
+scikit-learn==1.7.2
+scipy==1.16.2
+six==1.17.0
+threadpoolctl==3.6.0
+tzdata==2025.2
+anyio==4.11.0
+certifi==2025.10.5
+beautifulsoup4==4.14.2
+charset-normalizer==3.4.4
+deep-translator==1.11.4
+idna==3.11
+requests==2.32.5
+soupsieve==2.8
+typing_extensions==4.15.0
+urllib3==2.5.0
+
+
+
+
+
+
+
+
+
+
+
+
+*/
