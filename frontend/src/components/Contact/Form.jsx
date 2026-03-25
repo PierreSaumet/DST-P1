@@ -64,11 +64,11 @@ function ContactForm() {
         <div className="text-xl font-normal">
           Votre message a été envoyé correctement:
           {satisfaction ? (
-            <p className="mx-8 my-8 md:mx-4 md:text-lg lg:mx-0">
+            <p className="mx-8 my-8 text-3xl text-blue-200 md:mx-4 md:text-lg lg:mx-0">
               😊 Nous sommes ravis de savoir que ça vous plaît !
             </p>
           ) : (
-            <p className="mx-8 my-8 md:mx-4 md:text-lg lg:mx-0">
+            <p className="mx-8 my-8 text-3xl text-red-200 md:mx-4 md:text-lg lg:mx-0">
               😞 Nous sommes tristes de savoir que ça ne vous plaît pas.
             </p>
           )}

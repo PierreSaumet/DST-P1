@@ -10,7 +10,7 @@ function Layout() {
       Every page is rendered by Outlet
   */
   return (
-    <div className="bg-layout-bg font-roboto flex min-h-screen flex-col items-center pt-5 text-white">
+    <div className="bg-layout-bg font-roboto text-base-text flex min-h-screen flex-col items-center pt-5">
       <Header />
       <main className="my-10">
         <Outlet />

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 import imageSection1 from "../../assets/Section1Image.png";
+import AnimatedText from "../MotionAnimation/AnimatedText";
 
 function Learn() {
   return (
@@ -18,10 +19,7 @@ function Learn() {
         </h2>
 
         <p className="mb-8 text-sm font-normal sm:text-base md:text-lg">
-          Que vous débutiez en développement web ou que vous soyez un expert
-          cherchant à approfondir vos connaissances, nous vous proposons des
-          tutoriels, guides et bonnes pratiques pour apprendre
-          efficacement.{" "}
+          <AnimatedText text="Que vous débutiez en développement web ou que vous soyez un expert cherchant à approfondir vos connaissances, nous vous proposons des tutoriels, guides et bonnes pratiques pour apprendre efficacement." />
         </p>
 
         <Link className="justify-content hover:text-main-text mx-auto flex items-center text-xl font-medium xl:mx-0">

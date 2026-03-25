@@ -23,7 +23,7 @@ function Trust() {
           <img
             src={SmartFinder}
             alt="logo smartfinder"
-            className="my-4 max-h-[32px] md:mx-4 lg:mx-8"
+            className="my-4 max-h-[32px] invert md:mx-4 lg:mx-8 dark:invert-0"
           />
         </motion.div>
         <motion.div
@@ -35,7 +35,7 @@ function Trust() {
           <img
             src={Shells}
             alt="logo Shells"
-            className="my-4 max-h-[32px] md:mx-4 lg:mx-8"
+            className="my-4 max-h-[32px] invert md:mx-4 lg:mx-8 dark:invert-0"
           />
         </motion.div>
         <motion.div
@@ -47,7 +47,7 @@ function Trust() {
           <img
             src={Zoomer}
             alt="logo Zoomer"
-            className="my-4 max-h-[32px] md:mx-4 lg:mx-8"
+            className="my-4 max-h-[32px] invert md:mx-4 lg:mx-8 dark:invert-0"
           />
         </motion.div>
         <motion.div
@@ -59,7 +59,7 @@ function Trust() {
           <img
             src={Waves}
             alt="logo Waves"
-            className="my-4 max-h-[32px] md:mx-4 lg:mx-8"
+            className="my-4 max-h-[32px] invert md:mx-4 lg:mx-8 dark:invert-0"
           />
         </motion.div>
 
@@ -72,7 +72,7 @@ function Trust() {
           <img
             src={Artvenue}
             alt="logo Artvenue"
-            className="my-4 max-h-[32px] md:mx-4 lg:mx-8"
+            className="my-4 max-h-[32px] invert md:mx-4 lg:mx-8 dark:invert-0"
           />
         </motion.div>
       </div>

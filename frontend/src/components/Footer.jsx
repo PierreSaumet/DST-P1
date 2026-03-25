@@ -74,7 +74,7 @@ function Footer() {
       </div>
 
       <div className="border-footer-border mt-2 flex flex-col items-center justify-center border-t py-15 md:flex-row md:justify-between">
-        <h2 className="">@ 2025 Weeb, Inc. All rights reserved.</h2>
+        <h2 className="">@ 2026 Weeb, Inc. All rights reserved.</h2>
         <div className="my-5 flex flex-row px-1 lg:my-0">
           <Youtube size={24} className="mx-1 lg:mx-2" />
           <Facebook size={24} className="mx-1 lg:mx-2" />
