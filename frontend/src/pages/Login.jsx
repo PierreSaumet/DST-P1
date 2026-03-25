@@ -17,7 +17,9 @@ function Login() {
 
       <p className="text-white-gray mx-20 text-center text-xs font-medium md:mx-0">
         Vous n’avez pas de compte ? Vous pouvez en{" "}
-        <span className="hover:text-main-text text-white">créer un</span>
+        <Link className="hover:text-main-text text-white" to="/signup">
+          créer un
+        </Link>
       </p>
     </section>
   );

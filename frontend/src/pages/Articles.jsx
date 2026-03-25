@@ -11,7 +11,7 @@ function Articles() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const BASE_URL = "http://localhost:8000/api/articles/";
+  const BASE_URL = `${import.meta.env.VITE_API_URL}/articles/`;
 
   // Get all articles from the backend
   const fetchArticles = async (url = BASE_URL, query = "") => {

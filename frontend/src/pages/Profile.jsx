@@ -37,7 +37,7 @@ function Profile() {
     setSuccess("");
     setError("");
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
     if (!token) {
       setError("Vous devez être connecté pour publier un article.");
       return;
@@ -45,7 +45,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/articles/",
+        `${import.meta.env.VITE_API_URL}/articles/`,
         { title, description, image },
         {
           headers: {
