@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import axios from "axios";
 
@@ -20,23 +21,22 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   // Save tokens
-  const saveTokens = (accessToken, refreshToken) => {
+  const saveTokens = useCallback((accessToken, refreshToken) => {
     setToken(accessToken);
     localStorage.setItem("access_token", accessToken);
     if (refreshToken) {
       localStorage.setItem("refresh_token", refreshToken);
     }
-  };
+  }, []);
 
-  // Clear all
-  const clearTokens = () => {
+  // Clear tokens
+  const clearTokens = useCallback(() => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-  };
+  }, []);
 
-  // Use refresh token to get new access token
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = localStorage.getItem("refresh_token");
     if (!refreshToken) {
@@ -56,32 +56,31 @@ export const UserProvider = ({ children }) => {
       clearTokens();
       return null;
     }
+  }, [saveTokens, clearTokens]);
+
+  const tokenRef = useRef(token);
+  useEffect(() => {
+    tokenRef.current = token;
+  }, [token]);
+
+  // FetchUser
+  const fetchUser = useCallback(async (accessToken) => {
+    const tokenToUse = accessToken || tokenRef.current;
+    if (!tokenToUse) return;
+    setLoading(true);
+    try {
+      const response = await api.get("/users/me/", {
+        headers: { Authorization: `Bearer ${tokenToUse}` },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error while retrieving user:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Retrieve user from the backend
-  const fetchUser = useCallback(
-    async (accessToken) => {
-      const tokenToUse = accessToken || token;
-      if (!tokenToUse) return;
-
-      setLoading(true);
-      try {
-        const response = await api.get("/users/me/", {
-          headers: { Authorization: `Bearer ${tokenToUse}` },
-        });
-
-        setUser(response.data);
-      } catch (error) {
-        console.error("Error while retrieving user:", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [token],
-  );
-
-  // Try refresh if get 401
   useEffect(() => {
     const interceptor = api.interceptors.response.use(
       (response) => response,
@@ -101,10 +100,9 @@ export const UserProvider = ({ children }) => {
     return () => api.interceptors.response.eject(interceptor);
   }, [refreshAccessToken]);
 
-  // If token exist try get user
   useEffect(() => {
     if (token) fetchUser(token);
-  }, [token]);
+  }, [token, fetchUser]);
 
   const login = async (email, password) => {
     try {
@@ -126,7 +124,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, token, loading, login, logout, fetchUser, saveTokens }}
+      value={{ user, token, loading, login, logout, fetchUser }}
     >
       {children}
     </UserContext.Provider>

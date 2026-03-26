@@ -8,5 +8,20 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+    coverage: {
+      provider: 'v8',
+      exclude: [
+        "src/main.jsx",
+        "src/Layout.jsx",
+        "src/App.jsx",
+        "*.config.js"
+      ],
+    }
+  },
+
 })
 
