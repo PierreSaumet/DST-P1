@@ -71,7 +71,7 @@ function ContactForm() {
             </p>
           ) : (
             <p className="mx-8 my-8 text-3xl text-red-200 md:mx-4 md:text-lg lg:mx-0">
-              {t.contact.form.satisfactionPositive}
+              {t.contact.form.satisfactionNegative}
             </p>
           )}
         </div>
