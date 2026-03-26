@@ -1,0 +1,64 @@
+{
+    "test": "ceci est un test FRANCAIS",
+    "loading": "Chargement",
+    "back": "Retour",
+    "search": "Rechercher",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "connecting": "Connexion en cours",
+    "name": "Nom",
+    "firstName": "Prénom",
+    "phone": "Téléphone",
+    "email": "Email",
+    "message": "Message",
+    "contactBtn": "Contact",
+    "errorPage": {
+        "title": "404 - Page non trouvée",
+        "description": "Désolé, cette page n'existe pas!"
+    },
+    "articleDetail": {
+        "articleNotFound": "Article introuvable"
+    },
+    "articles": {
+        "title": "Liste des Articles",
+        "placeholder": "Rechercher un article (titre, description, auteur...)",
+        "loadingArticles": "Chargement des articles"
+    },
+    "contact": {
+        "opinion": "Votre avis compte !",
+        "description": "Votre retour est essentiel pour nous améliorer ! Partagez votre expérience, dites-nous ce que vous aimez et ce que nous pourrions améliorer. Vos suggestions nous aident à faire de ce blog une ressource toujours plus utile et enrichissante.",
+        "form": {
+            "messageSend": "Votre message a été envoyé correctement:",
+            "satisfactionPositive": "😊 Nous sommes ravis de savoir que ça vous plaît !",
+            "satisfactionNegative": "😞 Nous sommes tristes de savoir que ça ne vous plaît pas."
+        }
+    },
+    "exploreWeb": {
+        "h1": "Explorez le",
+        "web": "Web",
+        "inAll": "sous toutes",
+        "its": "ses",
+        "facets": "facettes",
+        "description": "Le monde du web évolue constamment, et nous sommes là pour vous guider à travers ses tendances, technologies et meilleures pratiques. Que vous soyez développeur, designer ou passionné du digital, notre blog vous offre du contenu de qualité pour rester à la pointe.",
+        "discoveryArticle": "Découvrir les articles",
+        "subscribeNewsletter": "S'abonner à la newsletter"
+    },
+    "trust": {
+        "title": "Ils nous font confiance"
+    },
+    "learn": {
+        "description": "Que vous débutiez en développement web ou que vous soyez un expert cherchant à approfondir vos connaissances, nous vous proposons des tutoriels, guides et bonnes pratiques pour apprendre efficacement.",
+        "h2": "Apprenez",
+        "and": "et",
+        "progress": "progressez",
+        "p": "Des ressources pour tous les niveaux",
+        "explore": "Explorer les ressources"
+    },
+    "stayTuned": {
+        "p": "Le web, un écosystème en constante évolution",
+        "description": "Chaque semaine, nous analysons les nouveautés du web : frameworks émergents, bonnes pratiques SEO, accessibilité, et bien plus encore. Ne manquez aucune actualité du digital !",
+        "link": "Lire les articles récents",
+        "title:": "Restez informé des dernières",
+        "trends": "tendances"
+    }
+}

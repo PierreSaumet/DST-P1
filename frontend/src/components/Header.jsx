@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import ToggleMode from "./ToggleMode";
+import ToggleModeDark from "./ToggleMode/ToggleModeDark";
+import ToggleModeLanguage from "./ToggleMode/ToggleModeLanguage";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,7 +39,14 @@ function Header() {
 
         <div className="hidden items-center md:flex">
           {/* Right Part */}
-          <ToggleMode />
+          <div className="mx-4">
+            <ToggleModeLanguage />
+          </div>
+
+          <div className="mx-4">
+            <ToggleModeDark />
+          </div>
+
           <Link to="/login" className="hover:text-main-text mx-4 text-base">
             Se connecter
           </Link>
@@ -109,7 +117,10 @@ function Header() {
               S'inscrire
             </Link>
             <div className="flex justify-center px-4 py-2">
-              <ToggleMode />
+              <ToggleModeDark />
+            </div>
+            <div className="flex justify-center px-4 py-2">
+              <ToggleModeLanguage />
             </div>
           </div>
         </>

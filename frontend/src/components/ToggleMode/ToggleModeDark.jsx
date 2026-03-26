@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 import useTheme from "./useTheme";
 
-function ToggleMode() {
+function ToggleModeDark() {
   const { isDark, toggle } = useTheme();
 
   return (
@@ -73,4 +73,4 @@ function ToggleMode() {
   );
 }
 
-export default ToggleMode;
+export default ToggleModeDark;
