@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../components/UserContext";
+import { useLanguage } from "../components/LanguageContext";
 
 function AuthCallback() {
   const navigate = useNavigate();
   const { saveTokens } = useUser();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -24,7 +26,7 @@ function AuthCallback() {
     }
   }, []);
 
-  return <p>Connexion en cours...</p>;
+  return <p>{t.connecting}...</p>;
 }
 
 export default AuthCallback;

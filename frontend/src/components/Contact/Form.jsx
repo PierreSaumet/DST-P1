@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { useState, useEffect } from "react";
 import { useUser } from "../UserContext";
+import { useLanguage } from "../LanguageContext";
 
 function ContactForm() {
   const { user } = useUser();
@@ -12,6 +13,7 @@ function ContactForm() {
   const [satisfaction, setSatisfaction] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (user) {
@@ -54,7 +56,7 @@ function ContactForm() {
       }
     } catch (error) {
       console.error("Erreur d'inscription:", error.response?.data);
-      alert("Inscription ne fonctionen pas.");
+      alert("Inscription ne fonctionne pas.");
     }
   };
   return (
@@ -62,14 +64,14 @@ function ContactForm() {
       {error}
       {success ? (
         <div className="text-xl font-normal">
-          Votre message a été envoyé correctement:
+          {t.contact.form.messageSend}
           {satisfaction ? (
             <p className="mx-8 my-8 text-3xl text-blue-200 md:mx-4 md:text-lg lg:mx-0">
-              😊 Nous sommes ravis de savoir que ça vous plaît !
+              {t.contact.form.satisfactionPositive}
             </p>
           ) : (
             <p className="mx-8 my-8 text-3xl text-red-200 md:mx-4 md:text-lg lg:mx-0">
-              😞 Nous sommes tristes de savoir que ça ne vous plaît pas.
+              {t.contact.form.satisfactionPositive}
             </p>
           )}
         </div>
@@ -87,7 +89,7 @@ function ContactForm() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-                placeholder="Nom"
+                placeholder={t.name}
                 required
               />
             </div>
@@ -100,7 +102,7 @@ function ContactForm() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-                placeholder="Prénom"
+                placeholder={t.firstName}
                 required
               />
             </div>
@@ -112,7 +114,7 @@ function ContactForm() {
                 type="tel"
                 id="phone"
                 className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-                placeholder="Téléphone"
+                placeholder={t.phone}
               />
             </div>
 
@@ -124,7 +126,7 @@ function ContactForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-                placeholder="Email"
+                placeholder={t.email}
                 required
               />
             </div>
@@ -139,14 +141,14 @@ function ContactForm() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-                placeholder="Message"
+                placeholder={t.message}
                 required
               />
             </div>
           </div>
 
           <button className="bg-main-text my-10 transform rounded-lg px-8 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:scale-110">
-            Contact
+            {t.contactBtn}
           </button>
         </form>
       )}

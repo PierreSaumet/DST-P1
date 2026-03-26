@@ -2,20 +2,26 @@ import { Link } from "react-router-dom";
 
 import imageSection1 from "../../assets/Section1Image.png";
 import AnimatedText from "../MotionAnimation/AnimatedText";
+import { useLanguage } from "../LanguageContext";
 
 function ExploreWeb() {
+  const { t } = useLanguage();
+
   return (
     <section className="my-[80px] flex flex-col items-center justify-center text-center">
       <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
-        Explorez le
-        <span className="text-main-text font-light"> Web </span>
-        sous toutes
+        {t.exploreWeb.h1}
+        <span className="text-main-text font-light"> {t.exploreWeb.web} </span>
+        {t.exploreWeb.inAll}
         <br />
-        ses <span className="decoration-main-text underline">facettes</span>
+        {t.exploreWeb.its}{" "}
+        <span className="decoration-main-text underline">
+          {t.exploreWeb.facets}
+        </span>
       </h1>
 
       <p className="m-8 max-w-3xl font-normal md:text-lg">
-        <AnimatedText text="Le monde du web évolue constamment, et nous sommes là pour vous guider à travers ses tendances, technologies et meilleures pratiques. Que vous soyez développeur, designer ou passionné du digital, notre blog vous offre du contenu de qualité pour rester à la pointe." />
+        <AnimatedText text={t.exploreWeb.description} />
       </p>
 
       <div className="flex flex-col content-center justify-center md:flex-row">
@@ -23,11 +29,11 @@ function ExploreWeb() {
           to="/"
           className="bg-main-text border-main-text mx-4 mb-4 transform rounded-lg border p-3 transition duration-300 ease-in-out hover:scale-110 md:mb-0"
         >
-          Découvrir les articles
+          {t.exploreWeb.discoveryArticle}
         </Link>
 
         <Link className="mx-4 transform rounded-lg border border-black p-3 transition duration-300 ease-in-out hover:scale-110 dark:border-white">
-          S'abonner à la newsletter
+          {t.exploreWeb.subscribeNewsletter}
         </Link>
       </div>
 

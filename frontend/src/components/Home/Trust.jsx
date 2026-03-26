@@ -5,12 +5,14 @@ import Zoomer from "../../assets/confidence/zoomer.png";
 import Shells from "../../assets/confidence/shells.png";
 import Waves from "../../assets/confidence/waves.png";
 import Artvenue from "../../assets/confidence/artevnue.png";
+import { useLanguage } from "../LanguageContext";
 
 function Trust() {
+  const { t } = useLanguage();
   return (
     <section className="my-[80px] flex flex-col items-center justify-center text-center">
       <h2 className="mx-2 text-3xl font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
-        Ils nous font confiance
+        {t.trust.title}
       </h2>
 
       <div className="mt-[80px] flex flex-col content-center justify-center md:flex-row">

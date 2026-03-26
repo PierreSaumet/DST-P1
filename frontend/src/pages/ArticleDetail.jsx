@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { useLanguage } from "../components/LanguageContext";
 
 function ArticleDetail() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -27,11 +29,13 @@ function ArticleDetail() {
   }, [id]);
 
   if (loading)
-    return <p className="mt-20 text-center text-gray-500">Chargement...</p>;
+    return <p className="mt-20 text-center text-gray-500">{t.loading}...</p>;
   if (error) return <p className="mt-20 text-center text-red-500">{error}</p>;
   if (!article)
     return (
-      <p className="mt-20 text-center text-gray-500">Article introuvable.</p>
+      <p className="mt-20 text-center text-gray-500">
+        {t.articleDetail.articleNotFound}.
+      </p>
     );
 
   return (
@@ -52,7 +56,7 @@ function ArticleDetail() {
           to="/articles"
           className="bg-main-text hover:bg-opacity-90 mt-8 inline-block rounded-lg px-4 py-2 text-white"
         >
-          Retour
+          {t.back}
         </Link>
       </div>
     </div>

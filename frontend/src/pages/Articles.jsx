@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../components/LanguageContext";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
@@ -9,6 +10,7 @@ function Articles() {
   const [prevPage, setPrevPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   const navigate = useNavigate();
   const BASE_URL = `${import.meta.env.VITE_API_URL}/articles/`;
@@ -61,7 +63,7 @@ function Articles() {
   return (
     <div className="my-20 flex flex-col items-center justify-center px-4">
       <h1 className="text-main-text mb-6 text-3xl font-bold">
-        Liste des Articles
+        {t.articles.title}
       </h1>
 
       <form onSubmit={handleSearch} className="mb-6 flex w-full max-w-lg">
@@ -70,18 +72,18 @@ function Articles() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="focus:ring-main-text flex-1 rounded-l-lg border border-gray-300 p-2 text-lg focus:ring-2 focus:outline-none"
-          placeholder="Rechercher un article (titre, description, auteur...)"
+          placeholder={t.articles.placeholder}
         />
         <button
           type="submit"
           className="bg-main-text hover:bg-opacity-90 mx-4 rounded-r-lg px-4 py-2 text-white"
         >
-          Rechercher
+          {t.search}
         </button>
       </form>
 
       {loading ? (
-        <p className="text-gray-500">Chargement des articles...</p>
+        <p className="text-gray-500">{t.articles.loadingArticles}...</p>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : (
@@ -123,7 +125,7 @@ function Articles() {
                   : "cursor-not-allowed bg-gray-300 text-gray-600"
               }`}
             >
-              Précédent
+              {t.previous}
             </button>
             <button
               onClick={handleNextPage}
@@ -134,7 +136,7 @@ function Articles() {
                   : "cursor-not-allowed bg-gray-300 text-gray-600"
               }`}
             >
-              Suivant
+              {t.next}
             </button>
           </div>
         </>
