@@ -12,7 +12,6 @@ function AuthCallback() {
     const run = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
-        // const error = params.get("error");
         const access = params.get("access_token");
 
         if (!access) {
@@ -21,16 +20,11 @@ function AuthCallback() {
         }
 
         saveAccessToken(access);
-
-        console.log("Token sauvegardé, fetchUser...");
         await fetchUser(access);
 
         window.history.replaceState(null, "", "/auth/callback");
-
-        console.log("fetchUser terminé, navigate profile");
         navigate("/profile");
       } catch (err) {
-        // ✅ Sans ce catch, l'erreur remonte à React Router → ErrorPage
         console.error("Erreur dans AuthCallback:", err);
         navigate("/login?error=callback_failed");
       }

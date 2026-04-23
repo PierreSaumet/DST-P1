@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../components/LanguageContext";
+import { api } from "../components/UserContext";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
@@ -13,15 +14,14 @@ function Articles() {
   const { t } = useLanguage();
 
   const navigate = useNavigate();
-  const BASE_URL = `${import.meta.env.VITE_API_URL}/articles/`;
 
   // Get all articles from the backend
-  const fetchArticles = async (url = BASE_URL, query = "") => {
+  const fetchArticles = async (query = "") => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.get(url, {
+      const response = await api.get("articles/", {
         params: query ? { search: query } : {},
       });
 
@@ -43,7 +43,7 @@ function Articles() {
   // Make request based on the search input
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchArticles(BASE_URL, search);
+    fetchArticles(search);
   };
 
   // Next page
@@ -104,11 +104,11 @@ function Articles() {
                   <h2 className="text-main-text text-xl font-semibold">
                     {article.title.slice(0, 12)}
                   </h2>
-                  <p className="mt-2 text-center text-gray-200">
-                    {article.description.slice(0, 15)}...
+                  <p className="mt-2 text-center break-words text-gray-200">
+                    {article.description.slice(0, 50)}...
                   </p>
                   <p className="mt-3 text-sm text-gray-400">
-                    Auteur ID : {article.user}
+                    {t.articleDetail.author} ID : {article.user}
                   </p>
                 </div>
               </div>

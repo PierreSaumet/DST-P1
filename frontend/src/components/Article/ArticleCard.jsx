@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trash2 } from "lucide-react";
 import { useUser } from "../UserContext";
+import { useLanguage } from "../LanguageContext";
 
 function ArticleCard({ article, onDeleted }) {
+  const { t } = useLanguage();
   const { api } = useUser();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -59,11 +61,8 @@ function ArticleCard({ article, onDeleted }) {
             <X size={14} />
           </button>
         </Link>
-
-        {/* Bouton suppression */}
       </div>
 
-      {/* Modal confirmation */}
       <AnimatePresence>
         {showConfirm && (
           <motion.div
@@ -82,24 +81,23 @@ function ArticleCard({ article, onDeleted }) {
             >
               <div className="mb-4 flex items-center gap-3">
                 <Trash2 className="text-red-500" size={24} />
-                <h2 className="text-lg font-bold">Supprimer l'article ?</h2>
+                <h2 className="text-lg font-bold">{t.delete.deleteArticle}</h2>
               </div>
               <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-                Cette action est irréversible. L'article sera définitivement
-                supprimé.
+                {t.delete.description}
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowConfirm(false)}
                   className="flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium transition hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
                 >
-                  Annuler
+                  {t.delete.cancel}
                 </button>
                 <button
                   onClick={handleDelete}
                   className="flex-1 rounded-lg bg-red-500 py-2 text-sm font-medium text-white transition hover:bg-red-600"
                 >
-                  Supprimer
+                  {t.delete.delete}
                 </button>
               </div>
             </motion.div>
@@ -107,7 +105,6 @@ function ArticleCard({ article, onDeleted }) {
         )}
       </AnimatePresence>
 
-      {/* Toast succès */}
       <AnimatePresence>
         {showSuccess && (
           <motion.div
@@ -116,7 +113,7 @@ function ArticleCard({ article, onDeleted }) {
             exit={{ opacity: 0, y: 50 }}
             className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-green-500 px-6 py-3 text-sm font-medium text-white shadow-lg"
           >
-            ✓ Article supprimé
+            {t.delete.delarticleDeletedete}
           </motion.div>
         )}
       </AnimatePresence>

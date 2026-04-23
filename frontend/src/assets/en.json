@@ -6,9 +6,14 @@
     "previous": "Previous",
     "next": "Next",
     "connecting": "Connecting",
+    "logout": "Logout",
     "name": "Last Name",
     "firstName": "First Name",
     "phone": "Phone",
+    "pwd": "Password",
+    "article": "article",
+    "liked": "liked",
+    "like": "like",
     "email": "Email",
     "message": "Message",
     "contactBtn": "Contact",
@@ -17,7 +22,8 @@
         "description": "Sorry, this page doesn't exist!"
     },
     "articleDetail": {
-        "articleNotFound": "Article not found"
+        "articleNotFound": "Article not found",
+        "author": "Author"
     },
     "articles": {
         "title": "List of Articles",
@@ -60,5 +66,42 @@
         "link": "Read recent articles",
         "title:": "Stay informed about the latest",
         "tendancies": "trends"
+    },
+    "signup": {
+        "signup": "Sign up",
+        "forgotPwd": "Forgot your password?",
+        "github": "Sing in with GithHub"
+    },
+    "login": {
+        "login": "Log in",
+        "forgotPwd": "Forgot your password?",
+        "noAccount": "Don't have an account? You can",
+        "noAccount2": "create one."
+    },
+    "profile": {
+        "articleCreated": "Article successfully created!",
+        "activity": "Activity",
+        "noArticleLiked": "You haven't liked any articles yet.",
+        "lastLiked": "Last article liked:",
+        "loadingArticles": "Loading articles",
+        "noArticle": "You haven't written any articles yet.",
+        "writeArticle": "Want to write an article?",
+        "publishArticle": "Publish article",
+        "publishForm": {
+            "title": "Title (minimum 5 characters)",
+            "description": "Article description",
+            "image": "Image link (optional)"
+        }
+    },
+    "delete": {
+        "deleteArticle": "Delete the article?",
+        "description": "This action is irreversible. The article will be permanently deleted.",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "articleDeleted": "Article deleted"
+    },
+    "header": {
+        "login": "Log in",
+        "signup": "Sign up"
     }
 }
