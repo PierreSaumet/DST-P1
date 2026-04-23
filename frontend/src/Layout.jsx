@@ -12,7 +12,7 @@ function Layout() {
   return (
     <div className="bg-layout-bg font-roboto text-base-text flex min-h-screen flex-col items-center pt-5">
       <Header />
-      <main className="my-10">
+      <main className="mt-10 min-h-[70vh] w-full">
         <Outlet />
       </main>
       <Footer />

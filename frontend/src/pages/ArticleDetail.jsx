@@ -16,7 +16,6 @@ function ArticleDetail() {
   const [liked, setLiked] = useState(false);
   const [loadingLike, setLoadingLike] = useState(true);
 
-  // 🔥 FETCH ARTICLE (incrémente views côté backend)
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -35,7 +34,6 @@ function ArticleDetail() {
     fetchArticle();
   }, [id]);
 
-  // 🔥 FETCH LIKES
   useEffect(() => {
     const fetchLikes = async () => {
       if (!user || !article) {

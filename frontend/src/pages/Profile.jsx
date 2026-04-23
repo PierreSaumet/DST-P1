@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../components/UserContext";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { ScrollText } from "lucide-react";
+import ArticleCard from "../components/Article/ArticleCard";
 
 function Profile() {
-  const { user, loading, logout, fetchUser, api } = useUser();
+  const { user, loading, logout, fetchUser, api, initializing } = useUser();
   const [checkedUser, setCheckedUser] = useState(false);
   const [likes, setLikes] = useState([]);
   const [loadingLikes, setLoadingLikes] = useState(true);
@@ -56,13 +57,17 @@ function Profile() {
 
     fetchLikes();
   }, [user]);
-  if (loading || !checkedUser) {
+
+  if (initializing || loading) {
     return <div>Chargement...</div>;
   }
-
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  const handleDeleted = (deletedId) => {
+    setArticles((prev) => prev.filter((a) => a.id !== deletedId));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,32 +158,38 @@ function Profile() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
             {articles.map((article) => (
-              <div
+              <ArticleCard
                 key={article.id}
-                className="flex flex-col justify-between rounded-lg border border-gray-700 bg-gray-100 p-4 shadow transition duration-300 hover:scale-105 hover:shadow-lg dark:border-gray-200 dark:bg-gray-800"
-              >
-                <div>
-                  <h3 className="mb-2 line-clamp-2 text-lg font-bold">
-                    {article.title}
-                  </h3>
+                article={article}
+                onDeleted={handleDeleted}
+              />
+              // <Link
+              //   to={`/articles/${article.id}`}
+              //   key={article.id}
+              //   className="flex flex-col justify-between rounded-lg border border-gray-700 bg-gray-100 p-4 shadow transition duration-300 hover:scale-105 hover:shadow-lg dark:border-gray-200 dark:bg-gray-800"
+              // >
+              //   <div>
+              //     <h3 className="mb-2 line-clamp-2 text-lg font-bold">
+              //       {article.title}
+              //     </h3>
 
-                  <p className="mb-2 line-clamp-3 text-sm text-gray-400">
-                    {article.description}
-                  </p>
+              //     <p className="mb-2 line-clamp-3 text-sm text-gray-400">
+              //       {article.description}
+              //     </p>
 
-                  {article.image && (
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="mb-3 h-40 w-full rounded object-cover"
-                    />
-                  )}
-                </div>
+              //     {article.image && (
+              //       <img
+              //         src={article.image}
+              //         alt={article.title}
+              //         className="mb-3 h-40 w-full rounded object-cover"
+              //       />
+              //     )}
+              //   </div>
 
-                <div className="mt-auto flex items-center justify-between text-sm text-gray-500">
-                  <span>👁 {article.views}</span>
-                </div>
-              </div>
+              //   <div className="mt-auto flex items-center justify-between text-sm text-gray-500">
+              //     <span>👁 {article.views}</span>
+              //   </div>
+              // </Link>
             ))}
           </div>
         )}

@@ -10,7 +10,6 @@ import axios from "axios";
 
 const UserContext = createContext();
 
-// Axios instance with interceptor for refresh
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
@@ -20,52 +19,51 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
-  const tokenRef = useRef(token);
+  const [initializing, setInitializing] = useState(true);
+  const tokenRef = useRef(null);
+  const refreshPromiseRef = useRef(null);
 
-  // Save token
   const saveAccessToken = useCallback((accessToken) => {
     setToken(accessToken);
+    tokenRef.current = accessToken;
   }, []);
 
-  // Clear tokens
   const clearTokens = useCallback(() => {
     setToken(null);
     tokenRef.current = null;
     setUser(null);
   }, []);
 
-  useEffect(() => {
-    tokenRef.current = token;
-  }, [token]);
-
   const refreshAccessToken = useCallback(async () => {
-    try {
-      console.log(" ava,t");
-      const response = await api.post(
-        `${import.meta.env.VITE_API_URL}/auth/token/refresh/`,
-      );
-      console.log("RESPOSNE ", response);
-      const newAccessToken = response.data.access;
-      saveAccessToken(newAccessToken);
-      return newAccessToken;
-    } catch (error) {
-      console.error("Refresh token expired.", error);
-      return null;
-    }
+    if (refreshPromiseRef.current) return refreshPromiseRef.current;
+
+    refreshPromiseRef.current = api
+      .post("/auth/token/refresh/")
+      .then((response) => {
+        const newToken = response.data.access;
+        saveAccessToken(newToken);
+        return newToken;
+      })
+      .catch((error) => {
+        console.error("Refresh token expired.", error);
+        clearTokens();
+        return null;
+      })
+      .finally(() => {
+        refreshPromiseRef.current = null;
+      });
+
+    return refreshPromiseRef.current;
   }, [saveAccessToken, clearTokens]);
 
-  // FetchUser
   const fetchUser = useCallback(async (accessToken) => {
     const tokenToUse = accessToken || tokenRef.current;
-    console.log("laaaaaaaaaaaa", tokenToUse);
     if (!tokenToUse) return;
     setLoading(true);
     try {
       const response = await api.get("/users/me/", {
         headers: { Authorization: `Bearer ${tokenToUse}` },
       });
-
-      console.log("le user?    ", response.data);
       setUser(response.data);
     } catch (error) {
       console.error("Error while retrieving user:", error);
@@ -75,63 +73,70 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  // Intercepteur requêtes : injecte le token
+  useEffect(() => {
+    const interceptor = api.interceptors.request.use((config) => {
+      const currentToken = tokenRef.current;
+      if (currentToken) {
+        config.headers.Authorization = `Bearer ${currentToken}`;
+      }
+      return config;
+    });
+    return () => api.interceptors.request.eject(interceptor);
+  }, []);
+
+  // Intercepteur réponses : retry si 401
   useEffect(() => {
     const interceptor = api.interceptors.response.use(
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        const isRefreshRequest = originalRequest.url?.includes(
+          "/auth/token/refresh/",
+        );
+
+        if (
+          error.response?.status === 401 &&
+          !originalRequest._retry &&
+          !isRefreshRequest
+        ) {
           originalRequest._retry = true;
           const newToken = await refreshAccessToken();
           if (newToken) {
             originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
             return api(originalRequest);
           }
+          clearTokens();
         }
+
         return Promise.reject(error);
       },
     );
     return () => api.interceptors.response.eject(interceptor);
-  }, [refreshAccessToken]);
+  }, [refreshAccessToken, clearTokens]);
 
+  // Initialisation : tente un refresh au démarrage
   useEffect(() => {
-    const interceptor = api.interceptors.request.use((config) => {
-      const token = tokenRef.current;
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-
-      return config;
-    });
-
-    return () => api.interceptors.request.eject(interceptor);
-  }, []);
-
-  // Try to refresh
-  useEffect(() => {
-    console.log(
-      "window.location.pathnamewindow.location.pathname ",
-      window.location.pathname,
-    );
     if (window.location.pathname === "/auth/callback") {
-      console.log("ON SKIP");
+      setInitializing(false);
       return;
     }
-    refreshAccessToken().then((t) => {
-      if (t) fetchUser(t);
-    });
-  }, [refreshAccessToken, fetchUser]);
+
+    refreshAccessToken()
+      .then((t) => {
+        if (t) return fetchUser(t);
+      })
+      .finally(() => {
+        setInitializing(false);
+      });
+  }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/token/`,
+      const response = await api.post(
+        "/auth/token/",
         { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        },
+        { headers: { "Content-Type": "application/json" } },
       );
       saveAccessToken(response.data.access);
       await fetchUser(response.data.access);
@@ -144,15 +149,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // Le back supprime le cookie refresh_token
-      await api.post(
-        `${import.meta.env.VITE_API_URL}/auth/logout/`,
-        {},
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        },
-      );
+      await api.post("/auth/logout/");
     } finally {
       clearTokens();
     }
@@ -164,6 +161,7 @@ export const UserProvider = ({ children }) => {
         user,
         token,
         loading,
+        initializing,
         login,
         logout,
         fetchUser,
