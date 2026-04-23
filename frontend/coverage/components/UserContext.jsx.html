@@ -1,65 +1,65 @@
-
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Code coverage report for components/UserContext.jsx</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="../prettify.css" />
-    <link rel="stylesheet" href="../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type='text/css'>
-        .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
-        }
-    </style>
+  <title>Code coverage report for components/UserContext.jsx</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../prettify.css" />
+  <link rel="stylesheet" href="../base.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style type='text/css'>
+    .coverage-summary .sorter {
+      background-image: url(../sort-arrow-sprite.png);
+    }
+  </style>
 </head>
-    
+
 <body>
-<div class='wrapper'>
+  <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> UserContext.jsx</h1>
-        <div class='clearfix'>
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Statements</span>
-                <span class='fraction'>107/107</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>27/27</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>4/5</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Lines</span>
-                <span class='fraction'>107/107</span>
-            </div>
-        
-            
+      <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> UserContext.jsx</h1>
+      <div class='clearfix'>
+
+        <div class='fl pad1y space-right2'>
+          <span class="strong">100% </span>
+          <span class="quiet">Statements</span>
+          <span class='fraction'>107/107</span>
         </div>
-        <p class="quiet">
-            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
-        </p>
-        <template id="filterTemplate">
-            <div class="quiet">
-                Filter:
-                <input type="search" id="fileSearch">
-            </div>
-        </template>
+
+
+        <div class='fl pad1y space-right2'>
+          <span class="strong">100% </span>
+          <span class="quiet">Branches</span>
+          <span class='fraction'>27/27</span>
+        </div>
+
+
+        <div class='fl pad1y space-right2'>
+          <span class="strong">80% </span>
+          <span class="quiet">Functions</span>
+          <span class='fraction'>4/5</span>
+        </div>
+
+
+        <div class='fl pad1y space-right2'>
+          <span class="strong">100% </span>
+          <span class="quiet">Lines</span>
+          <span class='fraction'>107/107</span>
+        </div>
+
+
+      </div>
+      <p class="quiet">
+        Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
+        previous block.
+      </p>
+      <template id="filterTemplate">
+        <div class="quiet">
+          Filter:
+          <input type="search" id="fileSearch">
+        </div>
+      </template>
     </div>
     <div class='status-line high'></div>
     <pre><table class="coverage">
@@ -354,7 +354,7 @@ export const UserProvider = ({ children }) =&gt; {
   const [loading, setLoading] = useState(false);
 &nbsp;
   // Save tokens
-  const saveTokens = useCallback((accessToken, refreshToken) =&gt; {
+  const saveAccessToken = useCallback((accessToken, refreshToken) =&gt; {
     setToken(accessToken);
     localStorage.setItem("access_token", accessToken);
     if (refreshToken) {
@@ -382,14 +382,14 @@ export const UserProvider = ({ children }) =&gt; {
         { refresh: refreshToken },
       );
       const newAccessToken = response.data.access;
-      saveTokens(newAccessToken, refreshToken);
+      saveAccessToken(newAccessToken, refreshToken);
       return newAccessToken;
     } catch (error) {
       console.error("Refresh token expired.", error);
       clearTokens();
       return null;
     }
-  }, [saveTokens, clearTokens]);
+  }, [saveAccessToken, clearTokens]);
 &nbsp;
   const tokenRef = useRef(token);
   useEffect(() =&gt; {
@@ -444,7 +444,7 @@ export const UserProvider = ({ children }) =&gt; {
         { email, password },
         { headers: { "Content-Type": "application/json" } },
       );
-      saveTokens(response.data.access, response.data.refresh);
+      saveAccessToken(response.data.access, response.data.refresh);
       await fetchUser(response.data.access);
       return true;
     } catch (error) {
@@ -465,23 +465,27 @@ export const UserProvider = ({ children }) =&gt; {
 };
 &nbsp;
 export const useUser = () =&gt; useContext(UserContext);
-&nbsp;</pre></td></tr></table></pre>
+&nbsp;</pre>
+    </td>
+    </tr>
+    </table>
+    </pre>
 
-                <div class='push'></div><!-- for sticky footer -->
-            </div><!-- /wrapper -->
-            <div class='footer quiet pad2 space-top1 center small'>
-                Code coverage generated by
-                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-26T16:36:06.409Z
-            </div>
-        <script src="../prettify.js"></script>
-        <script>
-            window.onload = function () {
-                prettyPrint();
-            };
-        </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
-    </body>
+    <div class='push'></div><!-- for sticky footer -->
+  </div><!-- /wrapper -->
+  <div class='footer quiet pad2 space-top1 center small'>
+    Code coverage generated by
+    <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+    at 2026-03-26T16:36:06.409Z
+  </div>
+  <script src="../prettify.js"></script>
+  <script>
+    window.onload = function () {
+      prettyPrint();
+    };
+  </script>
+  <script src="../sorter.js"></script>
+  <script src="../block-navigation.js"></script>
+</body>
+
 </html>
-    

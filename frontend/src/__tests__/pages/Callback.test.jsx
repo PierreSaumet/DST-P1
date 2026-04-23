@@ -5,7 +5,7 @@ import AuthCallback from "../../pages/Callback";
 import * as UserContext from "../../components/UserContext";
 
 const mockNavigate = vi.fn();
-const mockSaveTokens = vi.fn();
+const mocksaveAccessToken = vi.fn();
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -28,7 +28,7 @@ vi.mock("../../components/LanguageContext", () => ({
 const renderCallback = (search = "") => {
   delete window.location;
   window.location = { search };
-  UserContext.useUser.mockReturnValue({ saveTokens: mockSaveTokens });
+  UserContext.useUser.mockReturnValue({ saveAccessToken: mocksaveAccessToken });
   return render(
     <MemoryRouter>
       <AuthCallback />
@@ -58,7 +58,7 @@ describe("AuthCallback", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(mockSaveTokens).toHaveBeenCalledWith(
+        expect(mocksaveAccessToken).toHaveBeenCalledWith(
           "access-token",
           "refresh-token",
         );
@@ -73,7 +73,7 @@ describe("AuthCallback", () => {
       // ASSERT
       await waitFor(() => {
         expect(mockNavigate).toHaveBeenCalledWith("/login?error=access_denied");
-        expect(mockSaveTokens).not.toHaveBeenCalled();
+        expect(mocksaveAccessToken).not.toHaveBeenCalled();
       });
     });
 
@@ -83,7 +83,7 @@ describe("AuthCallback", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(mockSaveTokens).not.toHaveBeenCalled();
+        expect(mocksaveAccessToken).not.toHaveBeenCalled();
         expect(mockNavigate).not.toHaveBeenCalled();
       });
     });

@@ -4,10 +4,14 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import ToggleModeDark from "./ToggleMode/ToggleModeDark";
 import ToggleModeLanguage from "./ToggleMode/ToggleModeLanguage";
+import { useUser } from "./UserContext";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useUser();
 
+  console.log("uesrt", user);
+  console.log("la");
   return (
     <nav className="bg-header-bg fixed z-50 mx-auto h-20 w-full max-w-5xl rounded-xl px-4 py-2 shadow-md">
       <div className="flex items-center justify-between">
@@ -46,16 +50,26 @@ function Header() {
           <div className="mx-4">
             <ToggleModeDark />
           </div>
-
-          <Link to="/login" className="hover:text-main-text mx-4 text-base">
-            Se connecter
-          </Link>
-          <Link
-            to="/signup"
-            className="bg-main-text mx-4 transform rounded-lg px-4 py-2 text-white transition duration-300 ease-in-out hover:scale-110"
-          >
-            S'inscrire
-          </Link>
+          {user === null ? (
+            <div className="hidden items-center md:flex">
+              <Link to="/login" className="hover:text-main-text mx-4 text-base">
+                Se connecter
+              </Link>
+              <Link
+                to="/signup"
+                className="bg-main-text mx-4 transform cursor-pointer rounded-lg px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
+              >
+                S'inscrire
+              </Link>
+            </div>
+          ) : (
+            <button
+              className="dark:bg-main-text mx-4 transform cursor-pointer rounded-lg border-2 border-black px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         <button
