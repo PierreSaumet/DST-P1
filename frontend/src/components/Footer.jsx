@@ -13,61 +13,73 @@ function Footer() {
 
         <div className="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 className="text-blue-gray my-5 font-medium">PRODUCT</h2>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Pricing
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Overview
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Browse
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Accessibility
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Five
           </Link>
         </div>
         <div className="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 className="text-blue-gray my-5 font-medium">SOLUTIONS</h2>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Brainstorming
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Ideation
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Wireframing
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Research
           </Link>
         </div>
         <div className="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 className="text-blue-gray my-5 font-medium">RESSOURCES</h2>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Help Center
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Blog
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2">
             Tutorials
           </Link>
         </div>
         <div className="my-2 flex flex-col items-start text-base font-normal md:items-center lg:my-10">
           <h2 className="text-blue-gray my-5 font-medium">COMPANY</h2>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link
+            to="https://github.com/PierreSaumet"
+            className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2"
+          >
             About
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link
+            to="https://www.lemonde.fr/"
+            className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2"
+          >
             Press
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link
+            to="https://events.com/"
+            className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2"
+          >
             Events
           </Link>
-          <Link className="focus:outline-main-text my-3 rounded p-2 focus:outline-2 focus:outline-offset-2">
+          <Link
+            to="https://linkedin.com"
+            className="focus:outline-main-text my-3 transform rounded rounded-lg p-2 p-3 transition duration-300 ease-in-out hover:scale-110 focus:outline-2 focus:outline-offset-2"
+          >
             Careers
           </Link>
         </div>

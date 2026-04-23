@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserContext";
+import { useLanguage } from "../LanguageContext";
+
 function Form() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ function Form() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-            placeholder="Email"
+            placeholder={t.email}
             required
           />
         </div>
@@ -45,14 +48,14 @@ function Form() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border-main-text focus:border-main-text text-main-text w-full appearance-none border-b-2 p-2 text-center text-2xl focus:border focus:placeholder-transparent focus:outline-none"
-            placeholder="Password"
+            placeholder={t.pwd}
             required
           />
         </div>
       </div>
 
       <button className="bg-main-text my-10 transform rounded-lg px-8 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:scale-110">
-        Se connecter
+        {t.login.login}
       </button>
     </form>
   );

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useLanguage } from "../components/LanguageContext";
 import { useUser } from "../components/UserContext";
+import ReactMarkdown from "react-markdown";
 
 function ArticleDetail() {
   const { id } = useParams();
@@ -49,7 +50,6 @@ function ArticleDetail() {
         const isLiked = likedArticles.some(
           (like) => like.article.id === article.id,
         );
-        console.log("liked ? ", liked);
         setLiked(isLiked);
       } catch (error) {
         console.error("Erreur récupération likes :", error);
@@ -88,7 +88,7 @@ function ArticleDetail() {
 
   return (
     <div className="my-20 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-3xl rounded-2xl border border-gray-700 bg-gray-100 p-6 shadow-lg dark:bg-gray-800">
+      <div className="w-full max-w-4xl rounded-2xl border border-gray-700 bg-gray-100 p-6 shadow-lg dark:bg-gray-800">
         {/* IMAGE */}
         {article.image && (
           <img
@@ -104,11 +104,15 @@ function ArticleDetail() {
         </h1>
 
         {/* DESCRIPTION */}
-        <p className="mb-6 text-gray-300">{article.description}</p>
+        <div className="prose prose-invert mb-6 max-w-none text-gray-300">
+          <ReactMarkdown>{article.description}</ReactMarkdown>
+        </div>
 
         {/* META */}
         <div className="flex items-center justify-between text-sm text-gray-400">
-          <span>Auteur #{article.user}</span>
+          <span>
+            {t.articleDetail.author} #{article.user}
+          </span>
         </div>
 
         {/* LIKE BUTTON */}
@@ -122,7 +126,7 @@ function ArticleDetail() {
                 : "border border-gray-500 text-gray-300 hover:bg-gray-700"
             }`}
           >
-            {liked ? "❤️ Liké" : "🤍 Like"}
+            {liked ? `❤️ ${t.liked}` : `🤍 ${t.like}`}
           </button>
         )}
 

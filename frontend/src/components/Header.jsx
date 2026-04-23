@@ -5,13 +5,13 @@ import { Menu, X } from "lucide-react";
 import ToggleModeDark from "./ToggleMode/ToggleModeDark";
 import ToggleModeLanguage from "./ToggleMode/ToggleModeLanguage";
 import { useUser } from "./UserContext";
+import { useLanguage } from "./LanguageContext";
 
 function Header() {
+  const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useUser();
 
-  console.log("uesrt", user);
-  console.log("la");
   return (
     <nav className="bg-header-bg fixed z-50 mx-auto h-20 w-full max-w-5xl rounded-xl px-4 py-2 shadow-md">
       <div className="flex items-center justify-between">
@@ -53,13 +53,13 @@ function Header() {
           {user === null ? (
             <div className="hidden items-center md:flex">
               <Link to="/login" className="hover:text-main-text mx-4 text-base">
-                Se connecter
+                {t.header.login}
               </Link>
               <Link
                 to="/signup"
                 className="bg-main-text mx-4 transform cursor-pointer rounded-lg px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
               >
-                S'inscrire
+                {t.header.signup}
               </Link>
             </div>
           ) : (
@@ -67,7 +67,7 @@ function Header() {
               className="dark:bg-main-text mx-4 transform cursor-pointer rounded-lg border-2 border-black px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
               onClick={logout}
             >
-              Logout
+              {t.logout}
             </button>
           )}
         </div>
@@ -87,7 +87,6 @@ function Header() {
       {/* Mobile Menu */}
       {menuOpen && (
         <>
-          {/* Overlay */}
           <div
             className="bg-opacity-50 bg-header-bg fixed inset-0 top-20 z-10 min-h-full"
             onClick={() => setMenuOpen(false)}
@@ -121,14 +120,14 @@ function Header() {
               className="px-4 py-2 text-lg"
               onClick={() => setMenuOpen(false)}
             >
-              Se connecter
+              {t.header.login}
             </Link>
             <Link
               to="/signup"
               className="px-4 py-2 text-lg"
               onClick={() => setMenuOpen(false)}
             >
-              S'inscrire
+              {t.header.signup}
             </Link>
             <div className="flex justify-center px-4 py-2">
               <ToggleModeDark />

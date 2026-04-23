@@ -6,9 +6,14 @@
     "previous": "Précédent",
     "next": "Suivant",
     "connecting": "Connexion en cours",
+    "logout": "Se déconnecter",
     "name": "Nom",
     "firstName": "Prénom",
     "phone": "Téléphone",
+    "pwd": "Mot de passe",
+    "article": "article",
+    "liked": "aimé",
+    "like": "aime",
     "email": "Email",
     "message": "Message",
     "contactBtn": "Contact",
@@ -17,7 +22,8 @@
         "description": "Désolé, cette page n'existe pas!"
     },
     "articleDetail": {
-        "articleNotFound": "Article introuvable"
+        "articleNotFound": "Article introuvable",
+        "author": "Author"
     },
     "articles": {
         "title": "Liste des Articles",
@@ -60,5 +66,42 @@
         "link": "Lire les articles récents",
         "title:": "Restez informé des dernières",
         "trends": "tendances"
+    },
+    "signup": {
+        "signup": "S'inscrire",
+        "forgotPwd": "Mot de passe oublié ?",
+        "github": "Se connecter avec GitHub"
+    },
+    "login": {
+        "login": "Se connecter",
+        "forgotPwd": "Mot de passe oublié ?",
+        "noAccount": "Vous n’avez pas de compte ? Vous pouvez en",
+        "noAccount2": "créer un."
+    },
+    "profile": {
+        "articleCreated": "Article créé avec succès !",
+        "activity": "Activité",
+        "noArticleLiked": "Vous n'avez encore liké aucun article.",
+        "lastLiked": "Dernier article liké :",
+        "loadingArticles": "Chargement des articles",
+        "noArticle": "Vous n'avez encore écrit aucun article.",
+        "writeArticle": "Écrire un article?",
+        "publishArticle": "Publier l'article",
+        "publishForm": {
+            "title": "Titre (minimum 5 caractères)",
+            "description": "Description de l'article",
+            "image": "Lien de l'image (facultatif)"
+        }
+    },
+    "delete": {
+        "deleteArticle": "Supprimer l'article ?",
+        "description": "Cette action est irréversible. L'article sera définitivement supprimé.",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "articleDeleted": "Article supprimé"
+    },
+    "header": {
+        "login": "Se connecter",
+        "signup": "S'inscrire"
     }
 }
