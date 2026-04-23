@@ -88,12 +88,12 @@ function Articles() {
         <p className="text-red-500">{error}</p>
       ) : (
         <>
-          <div className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {articles.map((article) => (
               <div
                 key={article.id}
                 onClick={() => goToArticle(article.id)}
-                className="cursor-pointer rounded-xl border border-gray-200 bg-gray-800 shadow-md transition-transform hover:scale-[1.02]"
+                className="cursor-pointer rounded-xl border border-gray-200 bg-gray-100 shadow-md transition-transform hover:scale-[1.02] dark:bg-gray-800"
               >
                 <img
                   src={article.image}
@@ -102,10 +102,10 @@ function Articles() {
                 />
                 <div className="p-4 text-center">
                   <h2 className="text-main-text text-xl font-semibold">
-                    {article.title}
+                    {article.title.slice(0, 12)}
                   </h2>
                   <p className="mt-2 text-center text-gray-200">
-                    {article.description.slice(0, 10)}...
+                    {article.description.slice(0, 15)}...
                   </p>
                   <p className="mt-3 text-sm text-gray-400">
                     Auteur ID : {article.user}

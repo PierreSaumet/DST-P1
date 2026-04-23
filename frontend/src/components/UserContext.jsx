@@ -11,67 +11,61 @@ import axios from "axios";
 const UserContext = createContext();
 
 // Axios instance with interceptor for refresh
-const api = axios.create({
+export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const tokenRef = useRef(token);
 
-  // Save tokens
-  const saveTokens = useCallback((accessToken, refreshToken) => {
+  // Save token
+  const saveAccessToken = useCallback((accessToken) => {
     setToken(accessToken);
-    localStorage.setItem("access_token", accessToken);
-    if (refreshToken) {
-      localStorage.setItem("refresh_token", refreshToken);
-    }
   }, []);
 
   // Clear tokens
   const clearTokens = useCallback(() => {
-    setUser(null);
     setToken(null);
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    tokenRef.current = null;
+    setUser(null);
   }, []);
 
-  const refreshAccessToken = useCallback(async () => {
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (!refreshToken) {
-      clearTokens();
-      return null;
-    }
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/token/refresh/`,
-        { refresh: refreshToken },
-      );
-      const newAccessToken = response.data.access;
-      saveTokens(newAccessToken, refreshToken);
-      return newAccessToken;
-    } catch (error) {
-      console.error("Refresh token expired.", error);
-      clearTokens();
-      return null;
-    }
-  }, [saveTokens, clearTokens]);
-
-  const tokenRef = useRef(token);
   useEffect(() => {
     tokenRef.current = token;
   }, [token]);
 
+  const refreshAccessToken = useCallback(async () => {
+    try {
+      console.log(" ava,t");
+      const response = await api.post(
+        `${import.meta.env.VITE_API_URL}/auth/token/refresh/`,
+      );
+      console.log("RESPOSNE ", response);
+      const newAccessToken = response.data.access;
+      saveAccessToken(newAccessToken);
+      return newAccessToken;
+    } catch (error) {
+      console.error("Refresh token expired.", error);
+      return null;
+    }
+  }, [saveAccessToken, clearTokens]);
+
   // FetchUser
   const fetchUser = useCallback(async (accessToken) => {
     const tokenToUse = accessToken || tokenRef.current;
+    console.log("laaaaaaaaaaaa", tokenToUse);
     if (!tokenToUse) return;
     setLoading(true);
     try {
       const response = await api.get("/users/me/", {
         headers: { Authorization: `Bearer ${tokenToUse}` },
       });
+
+      console.log("le user?    ", response.data);
       setUser(response.data);
     } catch (error) {
       console.error("Error while retrieving user:", error);
@@ -101,17 +95,45 @@ export const UserProvider = ({ children }) => {
   }, [refreshAccessToken]);
 
   useEffect(() => {
-    if (token) fetchUser(token);
-  }, [token, fetchUser]);
+    const interceptor = api.interceptors.request.use((config) => {
+      const token = tokenRef.current;
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    });
+
+    return () => api.interceptors.request.eject(interceptor);
+  }, []);
+
+  // Try to refresh
+  useEffect(() => {
+    console.log(
+      "window.location.pathnamewindow.location.pathname ",
+      window.location.pathname,
+    );
+    if (window.location.pathname === "/auth/callback") {
+      console.log("ON SKIP");
+      return;
+    }
+    refreshAccessToken().then((t) => {
+      if (t) fetchUser(t);
+    });
+  }, [refreshAccessToken, fetchUser]);
 
   const login = async (email, password) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/token/`,
         { email, password },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
       );
-      saveTokens(response.data.access, response.data.refresh);
+      saveAccessToken(response.data.access);
       await fetchUser(response.data.access);
       return true;
     } catch (error) {
@@ -120,11 +142,34 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const logout = () => clearTokens();
+  const logout = async () => {
+    try {
+      // Le back supprime le cookie refresh_token
+      await api.post(
+        `${import.meta.env.VITE_API_URL}/auth/logout/`,
+        {},
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
+      );
+    } finally {
+      clearTokens();
+    }
+  };
 
   return (
     <UserContext.Provider
-      value={{ user, token, loading, login, logout, fetchUser }}
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        logout,
+        fetchUser,
+        saveAccessToken,
+        api,
+      }}
     >
       {children}
     </UserContext.Provider>

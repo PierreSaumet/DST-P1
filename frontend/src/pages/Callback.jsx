@@ -5,25 +5,38 @@ import { useLanguage } from "../components/LanguageContext";
 
 function AuthCallback() {
   const navigate = useNavigate();
-  const { saveTokens } = useUser();
+  const { saveAccessToken, fetchUser } = useUser();
   const { t } = useLanguage();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const access = params.get("access");
-    const refresh = params.get("refresh");
-    const error = params.get("error");
+    const run = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        // const error = params.get("error");
+        const access = params.get("access_token");
 
-    if (error) {
-      // USE ERROR
-      navigate(`/login?error=${error}`);
-      return;
-    }
+        if (!access) {
+          navigate(`/login?error=token_failed`);
+          return;
+        }
 
-    if (access && refresh) {
-      saveTokens(access, refresh);
-      navigate("/profile");
-    }
+        saveAccessToken(access);
+
+        console.log("Token sauvegardé, fetchUser...");
+        await fetchUser(access);
+
+        window.history.replaceState(null, "", "/auth/callback");
+
+        console.log("fetchUser terminé, navigate profile");
+        navigate("/profile");
+      } catch (err) {
+        // ✅ Sans ce catch, l'erreur remonte à React Router → ErrorPage
+        console.error("Erreur dans AuthCallback:", err);
+        navigate("/login?error=callback_failed");
+      }
+    };
+
+    run();
   }, []);
 
   return <p>{t.connecting}...</p>;
