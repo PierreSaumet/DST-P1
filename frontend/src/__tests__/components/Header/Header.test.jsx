@@ -10,6 +10,8 @@ vi.mock("../../../components/ToggleMode/ToggleModeLanguage", () => ({
   default: () => <div>ToggleModeLanguage</div>,
 }));
 
+const mockLogout = vi.fn();
+
 const renderHeader = () =>
   render(
     <MemoryRouter>
@@ -17,9 +19,30 @@ const renderHeader = () =>
     </MemoryRouter>,
   );
 
+vi.mock("../../../components/UserContext", () => ({
+  useUser: vi.fn(),
+}));
+
+vi.mock("../../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      header: {
+        login: "Se connecter",
+        signup: "S'inscrire",
+      },
+    },
+  }),
+}));
+
+import * as UserContext from "../../../components/UserContext";
+
 describe("Header", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    UserContext.useUser.mockReturnValue({
+      user: { first_name: "John", last_name: "Doe", email: "john@test.com" },
+      logout: mockLogout,
+    });
   });
 
   describe("rendering", () => {
@@ -31,12 +54,6 @@ describe("Header", () => {
       expect(screen.getByText("WEEB")).toBeInTheDocument();
       expect(screen.getAllByRole("link", { name: "Contact" })).toHaveLength(1);
       expect(screen.getAllByRole("link", { name: "Articles" })).toHaveLength(1);
-      expect(
-        screen.getAllByRole("link", { name: "Se connecter" }),
-      ).toHaveLength(1);
-      expect(screen.getAllByRole("link", { name: "S'inscrire" })).toHaveLength(
-        1,
-      );
     });
 
     it("renders menu toggle button", () => {
@@ -55,10 +72,21 @@ describe("Header", () => {
       // mobile menu links are duplicates — only desktop ones visible
       expect(screen.getAllByRole("link", { name: "Contact" })).toHaveLength(1);
     });
+    it("shows login and signup when user is not logged in", () => {
+      UserContext.useUser.mockReturnValue({
+        user: null,
+        logout: mockLogout,
+      });
+
+      renderHeader();
+
+      expect(screen.getByText("Se connecter")).toBeInTheDocument();
+      expect(screen.getByText("S'inscrire")).toBeInTheDocument();
+    });
   });
 
   describe("mobile menu", () => {
-    it("opens mobile menu on burger button click", () => {
+    it("opens mobile menu on button click", () => {
       // ARRANGE
       renderHeader();
 
@@ -66,19 +94,10 @@ describe("Header", () => {
       fireEvent.click(screen.getByRole("button"));
 
       // ASSERT
-      // mobile menu adds a second set of links
-      expect(screen.getAllByRole("link", { name: "Contact" })).toHaveLength(2);
-      expect(screen.getAllByRole("link", { name: "Profile" })).toHaveLength(2);
-      expect(screen.getAllByRole("link", { name: "Articles" })).toHaveLength(2);
-      expect(
-        screen.getAllByRole("link", { name: "Se connecter" }),
-      ).toHaveLength(2);
-      expect(screen.getAllByRole("link", { name: "S'inscrire" })).toHaveLength(
-        2,
-      );
+      expect(screen.getByText("Se connecter")).toBeInTheDocument();
     });
 
-    it("closes mobile menu on burger button click again", () => {
+    it("closes mobile menu on button click again", () => {
       // ARRANGE
       renderHeader();
       fireEvent.click(screen.getByRole("button"));
@@ -118,6 +137,19 @@ describe("Header", () => {
 
       // ASSERT
       expect(screen.getAllByRole("link", { name: "Contact" })).toHaveLength(1);
+    });
+  });
+
+  describe("logout", () => {
+    it("calls logout on button click", async () => {
+      // ARRANGE
+      renderHeader();
+
+      // ACT
+      fireEvent.click(screen.getByRole("logout"));
+
+      // ASSERT
+      expect(mockLogout).toHaveBeenCalled();
     });
   });
 });

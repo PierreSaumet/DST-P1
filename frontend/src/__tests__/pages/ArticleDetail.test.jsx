@@ -11,7 +11,11 @@ vi.mock("../../components/LanguageContext", () => ({
     t: {
       loading: "Chargement",
       back: "Retour",
-      articleDetail: { articleNotFound: "Article introuvable" },
+      articleDetail: {
+        articleNotFound: "Article introuvable",
+        author: "Auteur",
+        w,
+      },
     },
   }),
 }));

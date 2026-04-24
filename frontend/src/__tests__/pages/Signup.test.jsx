@@ -7,6 +7,18 @@ vi.mock("../../components/Signup/Form", () => ({
   default: () => <div>FormSignUp</div>,
 }));
 
+vi.mock("../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      signup: {
+        signup: "S'inscrire",
+        forgotPwd: "Mot de passe oublié ?",
+        github: "Se connecter avec GitHub",
+      },
+    },
+  }),
+}));
+
 const renderSignup = () =>
   render(
     <MemoryRouter>

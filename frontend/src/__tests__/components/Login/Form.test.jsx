@@ -18,6 +18,20 @@ vi.mock("../../../components/UserContext", () => ({
   useUser: () => ({ login: mockLogin }),
 }));
 
+vi.mock("../../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      login: {
+        login: "Se connecter",
+        forgotPwd: "Mot de passe oublié ?",
+        noAccount: "Vous n’avez pas de compte ? Vous pouvez en",
+        noAccount2: "créer un.",
+      },
+      email: "Email",
+    },
+  }),
+}));
+
 const renderForm = () =>
   render(
     <MemoryRouter>
@@ -36,8 +50,8 @@ describe("Login/Form", () => {
       renderForm();
 
       // ASSERT
-      expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
+      expect(document.getElementById("email")).toBeInTheDocument();
+      expect(document.getElementById("password")).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: "Se connecter" }),
       ).toBeInTheDocument();
@@ -51,10 +65,10 @@ describe("Login/Form", () => {
       renderForm();
 
       // ACT
-      fireEvent.change(screen.getByPlaceholderText("Email"), {
+      fireEvent.change(document.getElementById("email"), {
         target: { value: "test@test.com" },
       });
-      fireEvent.change(screen.getByPlaceholderText("Password"), {
+      fireEvent.change(document.getElementById("password"), {
         target: { value: "password123" },
       });
       fireEvent.submit(
@@ -73,10 +87,10 @@ describe("Login/Form", () => {
       renderForm();
 
       // ACT
-      fireEvent.change(screen.getByPlaceholderText("Email"), {
+      fireEvent.change(document.getElementById("email"), {
         target: { value: "test@test.com" },
       });
-      fireEvent.change(screen.getByPlaceholderText("Password"), {
+      fireEvent.change(document.getElementById("password"), {
         target: { value: "password123" },
       });
       fireEvent.submit(
@@ -96,10 +110,10 @@ describe("Login/Form", () => {
       renderForm();
 
       // ACT
-      fireEvent.change(screen.getByPlaceholderText("Email"), {
+      fireEvent.change(document.getElementById("email"), {
         target: { value: "wrong@test.com" },
       });
-      fireEvent.change(screen.getByPlaceholderText("Password"), {
+      fireEvent.change(document.getElementById("password"), {
         target: { value: "wrongpassword" },
       });
       fireEvent.submit(
@@ -122,7 +136,7 @@ describe("Login/Form", () => {
     it("updates email value on change", () => {
       // ARRANGE
       renderForm();
-      const emailInput = screen.getByPlaceholderText("Email");
+      const emailInput = document.getElementById("email");
 
       // ACT
       fireEvent.change(emailInput, { target: { value: "new@test.com" } });
@@ -134,7 +148,7 @@ describe("Login/Form", () => {
     it("updates password value on change", () => {
       // ARRANGE
       renderForm();
-      const passwordInput = screen.getByPlaceholderText("Password");
+      const passwordInput = document.getElementById("password");
 
       // ACT
       fireEvent.change(passwordInput, { target: { value: "newpassword" } });
