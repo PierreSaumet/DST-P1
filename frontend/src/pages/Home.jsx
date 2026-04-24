@@ -2,14 +2,14 @@ import ExploreWeb from "../components/Home/ExploreWeb";
 import Learn from "../components/Home/Learn";
 import StayTuned from "../components/Home/StayTuned";
 import Trust from "../components/Home/Trust";
-import axios from "axios";
+import { api } from "../components/UserContext";
 
 function Home() {
   const enfer = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `https://weeb-backend-mcg6.onrender.com/api/users/password-reset/request/`,
+      const response = await api.post(
+        `/users/password-reset/request/`,
         { email: "admin@admin.com" },
         { headers: { "Content-Type": "application/json" } },
       );

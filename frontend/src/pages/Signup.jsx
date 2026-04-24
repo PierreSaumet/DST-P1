@@ -5,6 +5,7 @@ import { useLanguage } from "../components/LanguageContext";
 
 function Signup() {
   const { t } = useLanguage();
+  const truc = `${import.meta.env.VITE_API_URL}/auth/github/`;
   const handleGithubLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/github/`;
   };
@@ -16,6 +17,8 @@ function Signup() {
           {t.signup.signup}
         </h2>
       </div>
+
+      <p> truc = {truc}</p>
 
       <FormSignUp />
 
