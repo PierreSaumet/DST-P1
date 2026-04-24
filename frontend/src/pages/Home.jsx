@@ -11,7 +11,7 @@ function Home() {
       const response = await api.post(
         `/users/password-reset/request/`,
         { email: "saumet.pierre@gmail.com" },
-        { headers: { "Content-Type": "application/json" } },
+        // { headers: { "Content-Type": "application/json" } },
       );
 
       console.log("enfer ", response);
