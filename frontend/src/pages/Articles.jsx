@@ -21,7 +21,7 @@ function Articles() {
     setError("");
 
     try {
-      const response = await axios.get("articles/", {
+      const response = await axios.get("api/articles/", {
         params: query ? { search: query } : {},
         withCredentials: true,
       });
