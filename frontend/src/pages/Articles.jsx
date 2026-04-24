@@ -21,15 +21,10 @@ function Articles() {
     setError("");
 
     try {
-      const response = await api.get(
-        "articles/",
-        {
-          params: query ? { search: query } : {},
-        },
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await api.get("articles/", {
+        params: query ? { search: query } : {},
+        withCredentials: true,
+      });
 
       setArticles(response.data.results);
       setNextPage(response.data.next);
