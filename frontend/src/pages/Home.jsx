@@ -10,7 +10,7 @@ function Home() {
     try {
       const response = await api.post(
         `/users/password-reset/request/`,
-        { email: "admin@admin.com" },
+        { email: "saumet.pierre@gmail.com" },
         { headers: { "Content-Type": "application/json" } },
       );
 
