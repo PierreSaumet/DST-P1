@@ -22,7 +22,7 @@ function Articles() {
 
     try {
       const response = await axios.get(
-        "https://weeb-backend-mcg6.onrender.com/api/articles//",
+        "https://weeb-backend-mcg6.onrender.com/api/articles/",
         {
           params: query ? { search: query } : {},
           withCredentials: true,
