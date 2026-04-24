@@ -22,7 +22,7 @@ function Home() {
   return (
     <div>
       <div>
-        <form onSubmit={enfer}></form>
+        <form onSubmit={enfer}>CLIKE KEKEKEKEK</form>
       </div>
       <ExploreWeb />
       <Trust />
