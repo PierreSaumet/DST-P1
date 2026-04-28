@@ -1,384 +1,437 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { vi, beforeEach, describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import axios from "axios";
-import Profile from "../../pages/Profile";
 import * as UserContext from "../../components/UserContext";
+import Profile from "../../pages/Profile";
 
-vi.mock("axios");
+// ─── Global mocks ─────────────────────────────────────────────────────────────
 
 vi.mock("../../components/UserContext", () => ({
   useUser: vi.fn(),
 }));
 
+// ArticleCard and ArticleForm are tested in isolation — stub them here
+vi.mock("../../components/Article/ArticleCard", () => ({
+  default: ({ article, onDeleted }) => (
+    <div data-testid={`article-card-${article.id}`}>
+      <span>{article.title}</span>
+      <button onClick={() => onDeleted(article.id)}>Delete {article.id}</button>
+    </div>
+  ),
+}));
+
+vi.mock("../../components/Profile/ArticleForm", () => ({
+  default: ({ onArticleCreated }) => (
+    <button onClick={() => onArticleCreated({ id: 99, title: "New article" })}>
+      Create article
+    </button>
+  ),
+}));
+
+vi.mock("../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      loading: "Loading",
+      logout: "Logout",
+      article: "article",
+      liked: "liked",
+      profile: {
+        activity: "Activity",
+        noArticleLiked: "No liked articles yet.",
+        lastLiked: "Last liked article:",
+        loadingArticles: "Loading articles...",
+        noArticle: "No articles yet.",
+        publishArticle: "Publish an article",
+        publishForm: {
+          title: "Title",
+          description: "Description",
+          image: "Image URL",
+        },
+      },
+    },
+  }),
+}));
+
+// ─── Fixtures ─────────────────────────────────────────────────────────────────
+
+const mockLogout = vi.fn();
+
 const mockUser = {
+  id: 1,
   first_name: "John",
   last_name: "Doe",
   email: "john@test.com",
 };
 
-const mockFetchUser = vi.fn();
-const mockLogout = vi.fn();
+const mockArticles = [
+  { id: 10, title: "Article A", description: "Desc A", views: 5, image: null },
+  { id: 11, title: "Article B", description: "Desc B", views: 3, image: null },
+];
 
-const renderProfile = () =>
-  render(
-    <MemoryRouter>
-      <Profile />
-    </MemoryRouter>,
-  );
+const mockLikes = [
+  {
+    id: 1,
+    created_at: "2024-01-15T10:00:00Z",
+    article: { id: 10, title: "Article A" },
+  },
+  {
+    id: 2,
+    created_at: "2024-03-01T10:00:00Z",
+    article: { id: 11, title: "Article B" },
+  },
+];
 
-const setupUser = (overrides = {}) => {
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+/**
+ * Build a mock `api` object.
+ * By default: articles and likes resolve successfully.
+ */
+const makeMockApi = ({
+  articlesData = { results: mockArticles },
+  likesData = mockLikes,
+  articlesError = null,
+  likesError = null,
+} = {}) => ({
+  get: vi.fn((url) => {
+    if (url.includes("articles")) {
+      return articlesError
+        ? Promise.reject(articlesError)
+        : Promise.resolve({ data: articlesData });
+    }
+    if (url.includes("likes")) {
+      return likesError
+        ? Promise.reject(likesError)
+        : Promise.resolve({ data: likesData });
+    }
+    return Promise.resolve({ data: {} });
+  }),
+});
+
+/**
+ * Configure useUser mock and render Profile.
+ * Waits for all pending promises so the component is fully loaded.
+ */
+const renderProfile = async (userOverrides = {}, apiOverrides = {}) => {
+  const api = makeMockApi(apiOverrides);
+
   UserContext.useUser.mockReturnValue({
     user: mockUser,
     loading: false,
+    initializing: false,
     logout: mockLogout,
-    fetchUser: mockFetchUser,
-    ...overrides,
+    api,
+    ...userOverrides,
   });
+
+  let result;
+  await act(async () => {
+    result = render(
+      <MemoryRouter>
+        <Profile />
+      </MemoryRouter>,
+    );
+    await flushPromises();
+  });
+
+  return { ...result, api };
 };
 
-const fillForm = ({
-  title = "Mon titre",
-  description = "Ma description",
-  image = "https://img.com/img.png",
-} = {}) => {
-  fireEvent.change(
-    screen.getByPlaceholderText("Titre (minimum 5 caractères)"),
-    {
-      target: { value: title },
-    },
-  );
-  fireEvent.change(screen.getByPlaceholderText("Description de l'article"), {
-    target: { value: description },
-  });
-  fireEvent.change(
-    screen.getByPlaceholderText("Lien de l'image (facultatif)"),
-    {
-      target: { value: image },
-    },
-  );
-};
+// ─── Setup ────────────────────────────────────────────────────────────────────
 
-const submitForm = () =>
-  fireEvent.submit(
-    screen.getByRole("button", { name: "Publier l'article" }).closest("form"),
-  );
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+// ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe("Profile", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    localStorage.clear();
-  });
+  // ── Loading / redirects ────────────────────────────────────────────────────
 
-  describe("rendering", () => {
-    it("shows loading state while checking user", () => {
-      // ARRANGE
-      setupUser({ loading: true, user: null });
-
-      // ACT
-      renderProfile();
-
-      // ASSERT
-      expect(screen.getByText("Chargement...")).toBeInTheDocument();
-    });
-
-    it("shows loading state while checkedUser is false", () => {
-      // ARRANGE
-      mockFetchUser.mockReturnValue(new Promise(() => {}));
-      setupUser({ user: null, loading: false });
-
-      // ACT
-      renderProfile();
-
-      // ASSERT
-      expect(screen.getByText("Chargement...")).toBeInTheDocument();
-    });
-
-    it("redirects to /login if no user after check", async () => {
-      // ARRANGE
-      mockFetchUser.mockResolvedValueOnce(null);
-      setupUser({ user: null, loading: false });
-
-      // ACT
-      renderProfile();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(screen.queryByText("Chargement...")).not.toBeInTheDocument();
+  describe("loading and redirect states", () => {
+    it("shows a loading indicator while initializing", () => {
+      UserContext.useUser.mockReturnValue({
+        user: null,
+        loading: false,
+        initializing: true,
+        logout: mockLogout,
+        api: makeMockApi(),
       });
 
-      expect(
-        screen.queryByPlaceholderText("Titre (minimum 5 caractères)"),
-      ).not.toBeInTheDocument();
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
     });
 
-    it("renders user profile and article form when user is logged in", async () => {
-      // ARRANGE
-      setupUser();
-      mockFetchUser.mockResolvedValueOnce(null);
-
-      // ACT
-      renderProfile();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(screen.getByText(/Profil de Prénom: John/)).toBeInTheDocument();
-        expect(
-          screen.getByText(/Votre Email: john@test.com/),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByPlaceholderText("Titre (minimum 5 caractères)"),
-        ).toBeInTheDocument();
+    it("shows a loading indicator while loading", () => {
+      UserContext.useUser.mockReturnValue({
+        user: null,
+        loading: true,
+        initializing: false,
+        logout: mockLogout,
+        api: makeMockApi(),
       });
+
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
+    });
+
+    it("redirects to /login when user is null and not loading", () => {
+      UserContext.useUser.mockReturnValue({
+        user: null,
+        loading: false,
+        initializing: false,
+        logout: mockLogout,
+        api: makeMockApi(),
+      });
+
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      // Profile content must not be rendered
+      expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
+      // ArticleForm stub must not be rendered either
+      expect(screen.queryByText("Create article")).not.toBeInTheDocument();
     });
   });
 
-  describe("useEffect", () => {
-    it("calls fetchUser if user is null on mount", async () => {
-      // ARRANGE
-      mockFetchUser.mockResolvedValueOnce(null);
-      setupUser({ user: null, loading: false });
+  // ── User info ─────────────────────────────────────────────────────────────
 
-      // ACT
-      renderProfile();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(mockFetchUser).toHaveBeenCalled();
-      });
+  describe("user info", () => {
+    it("renders the user's full name", async () => {
+      await renderProfile();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
-    it("does not call fetchUser if user is already set", async () => {
-      // ARRANGE
-      setupUser();
+    it("renders the user's email", async () => {
+      await renderProfile();
+      expect(screen.getByText("john@test.com")).toBeInTheDocument();
+    });
 
-      // ACT
-      renderProfile();
+    it("renders the logout button", async () => {
+      await renderProfile();
+      expect(screen.getByText("Logout")).toBeInTheDocument();
+    });
 
-      // ASSERT
-      await waitFor(() => {
-        expect(mockFetchUser).not.toHaveBeenCalled();
-      });
+    it("calls logout when the logout button is clicked", async () => {
+      await renderProfile();
+      fireEvent.click(screen.getByText("Logout"));
+      expect(mockLogout).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe("handleSubmit", () => {
-    it("shows error if no token in localStorage", async () => {
-      // ARRANGE
-      setupUser();
-      renderProfile();
-      fillForm();
+  // ── API calls ─────────────────────────────────────────────────────────────
 
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("Vous devez être connecté pour publier un article."),
-        ).toBeInTheDocument();
-      });
-      expect(axios.post).not.toHaveBeenCalled();
+  describe("API calls on mount", () => {
+    it("fetches articles for the logged-in user", async () => {
+      const { api } = await renderProfile();
+      expect(api.get).toHaveBeenCalledWith(
+        expect.stringContaining(`user=${mockUser.id}`),
+        expect.anything(),
+      );
     });
 
-    it("calls axios.post with correct payload when token exists", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockResolvedValueOnce({ status: 201 });
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith(
-          expect.stringContaining("/articles/"),
-          {
-            title: "Mon titre",
-            description: "Ma description",
-            image: "https://img.com/img.png",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer valid-token",
-            },
-          },
-        );
-      });
+    it("fetches likes on mount", async () => {
+      const { api } = await renderProfile();
+      expect(api.get).toHaveBeenCalledWith("likes/");
     });
 
-    it("shows success message and resets form on article creation", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockResolvedValueOnce({ status: 201 });
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("Article créé avec succès !"),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByPlaceholderText("Titre (minimum 5 caractères)").value,
-        ).toBe("");
-        expect(
-          screen.getByPlaceholderText("Description de l'article").value,
-        ).toBe("");
-        expect(
-          screen.getByPlaceholderText("Lien de l'image (facultatif)").value,
-        ).toBe("");
+    it("does not fetch when user is null", () => {
+      // useEffects bail out early when user is null
+      const api = makeMockApi();
+      UserContext.useUser.mockReturnValue({
+        user: null,
+        loading: false,
+        initializing: false,
+        logout: mockLogout,
+        api,
       });
+
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      expect(api.get).not.toHaveBeenCalled();
     });
 
-    it("shows error from title field if API returns title error", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockRejectedValueOnce({
-        response: { data: { title: ["Le titre est trop court."] } },
-      });
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("Le titre est trop court."),
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("shows error from description field if API returns description error", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockRejectedValueOnce({
-        response: { data: { description: ["La description est invalide."] } },
-      });
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("La description est invalide."),
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("shows error from detail field if API returns detail error", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockRejectedValueOnce({
-        response: { data: { detail: "Permission refusée." } },
-      });
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(screen.getByText("Permission refusée.")).toBeInTheDocument();
-      });
-    });
-
-    it("shows generic error message if API returns no specific error", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      axios.post.mockRejectedValueOnce(new Error("Network error"));
-      setupUser();
-      renderProfile();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("Erreur lors de la création de l'article."),
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("logs error to console on API error", async () => {
-      // ARRANGE
-      localStorage.setItem("access_token", "valid-token");
-      const apiError = new Error("Network error");
-      axios.post.mockRejectedValueOnce(apiError);
+    it("logs an error when articles fetch fails", async () => {
       const consoleSpy = vi
         .spyOn(console, "error")
         .mockImplementation(() => {});
-      setupUser();
-      renderProfile();
-      fillForm();
 
-      // ACT
-      submitForm();
+      await renderProfile({}, { articlesError: new Error("articles error") });
 
-      // ASSERT
-      await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith(
-          "Erreur lors de la création de l'article :",
-          apiError,
-        );
-      });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Erreur récupération articles :",
+        expect.any(Error),
+      );
+      consoleSpy.mockRestore();
+    });
 
+    it("logs an error when likes fetch fails", async () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await renderProfile({}, { likesError: new Error("likes error") });
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Erreur récupération likes :",
+        expect.any(Error),
+      );
       consoleSpy.mockRestore();
     });
   });
 
-  describe("logout", () => {
-    it("calls logout on button click", async () => {
-      // ARRANGE
-      setupUser();
-      renderProfile();
+  // ── Articles section ───────────────────────────────────────────────────────
 
-      // ACT
-      fireEvent.click(screen.getByRole("button", { name: "Logout" }));
+  describe("articles section", () => {
+    it("shows a loading state while articles are being fetched", () => {
+      // api.get never resolves → loadingArticles stays true
+      const api = {
+        get: vi.fn(() => new Promise(() => {})),
+      };
+      UserContext.useUser.mockReturnValue({
+        user: mockUser,
+        loading: false,
+        initializing: false,
+        logout: mockLogout,
+        api,
+      });
 
-      // ASSERT
-      expect(mockLogout).toHaveBeenCalled();
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText("Loading articles...")).toBeInTheDocument();
+    });
+
+    it("renders an ArticleCard for each article", async () => {
+      await renderProfile();
+      expect(screen.getByTestId("article-card-10")).toBeInTheDocument();
+      expect(screen.getByTestId("article-card-11")).toBeInTheDocument();
+    });
+
+    it("shows a message when the user has no articles", async () => {
+      await renderProfile({}, { articlesData: { results: [] } });
+      expect(screen.getByText("No articles yet.")).toBeInTheDocument();
+    });
+
+    it("shows a message when articles fetch fails", async () => {
+      await renderProfile({}, { articlesError: new Error("fail") });
+      expect(screen.getByText("No articles yet.")).toBeInTheDocument();
     });
   });
 
-  describe("controlled inputs", () => {
-    it("updates all field values on change", () => {
-      // ARRANGE
-      setupUser();
-      renderProfile();
+  // ── Delete article ─────────────────────────────────────────────────────────
 
-      // ACT
-      fillForm();
+  describe("handleDeleted", () => {
+    it("removes the deleted article card from the list", async () => {
+      await renderProfile();
 
-      // ASSERT
-      expect(
-        screen.getByPlaceholderText("Titre (minimum 5 caractères)").value,
-      ).toBe("Mon titre");
-      expect(
-        screen.getByPlaceholderText("Description de l'article").value,
-      ).toBe("Ma description");
-      expect(
-        screen.getByPlaceholderText("Lien de l'image (facultatif)").value,
-      ).toBe("https://img.com/img.png");
+      expect(screen.getByTestId("article-card-10")).toBeInTheDocument();
+
+      fireEvent.click(screen.getByText("Delete 10"));
+
+      expect(screen.queryByTestId("article-card-10")).not.toBeInTheDocument();
+      expect(screen.getByTestId("article-card-11")).toBeInTheDocument();
+    });
+
+    it("shows the empty state message when the last article is deleted", async () => {
+      await renderProfile({}, { articlesData: { results: [mockArticles[0]] } });
+
+      fireEvent.click(screen.getByText("Delete 10"));
+
+      expect(screen.getByText("No articles yet.")).toBeInTheDocument();
+    });
+  });
+
+  // ── Create article ─────────────────────────────────────────────────────────
+
+  describe("onArticleCreated", () => {
+    it("prepends the new article to the list", async () => {
+      await renderProfile();
+
+      fireEvent.click(screen.getByText("Create article"));
+
+      // Article 99 injected by the ArticleForm stub must appear
+      expect(screen.getByTestId("article-card-99")).toBeInTheDocument();
+    });
+
+    it("shows the new article even when the list was initially empty", async () => {
+      await renderProfile({}, { articlesData: { results: [] } });
+
+      expect(screen.getByText("No articles yet.")).toBeInTheDocument();
+
+      fireEvent.click(screen.getByText("Create article"));
+
+      expect(screen.getByTestId("article-card-99")).toBeInTheDocument();
+      expect(screen.queryByText("No articles yet.")).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Likes / activity section ───────────────────────────────────────────────
+
+  describe("likes / activity section", () => {
+    it("shows a loading state while likes are being fetched", () => {
+      const api = {
+        get: vi.fn(() => new Promise(() => {})),
+      };
+      UserContext.useUser.mockReturnValue({
+        user: mockUser,
+        loading: false,
+        initializing: false,
+        logout: mockLogout,
+        api,
+      });
+
+      render(
+        <MemoryRouter>
+          <Profile />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
+    });
+
+    it("shows a message when the user has no likes", async () => {
+      await renderProfile({}, { likesData: [] });
+      expect(screen.getByText("No liked articles yet.")).toBeInTheDocument();
+    });
+
+    it("shows the total number of likes", async () => {
+      await renderProfile();
+      // 2 likes → "❤️ 2 articles likeds"
+      expect(screen.getByText(/❤️ 2/)).toBeInTheDocument();
+    });
+
+    it("shows the most recently liked article", async () => {
+      await renderProfile();
+      // lastLiked is sorted by created_at desc → Article B (2024-03-01)
+      expect(screen.getByText("Article B")).toBeInTheDocument();
+    });
+
+    it("shows a message when likes fetch fails", async () => {
+      await renderProfile({}, { likesError: new Error("fail") });
+      expect(screen.getByText("No liked articles yet.")).toBeInTheDocument();
     });
   });
 });

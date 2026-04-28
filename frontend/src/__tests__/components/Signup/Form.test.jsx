@@ -15,6 +15,18 @@ vi.mock("react-router-dom", async (importOriginal) => {
   };
 });
 
+vi.mock("../../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      signup: {
+        signup: "S'inscrire",
+        forgotPwd: "Mot de passe oublié ?",
+        github: "Se connecter avec GitHub",
+      },
+    },
+  }),
+}));
+
 vi.mock("../../../components/UserContext", () => ({
   useUser: () => ({ login: mockLogin }),
 }));
@@ -34,16 +46,16 @@ const fillForm = ({
   firstName = "John",
   lastName = "Doe",
 } = {}) => {
-  fireEvent.change(screen.getByPlaceholderText("Email"), {
+  fireEvent.change(document.getElementById("email"), {
     target: { value: email },
   });
-  fireEvent.change(screen.getByPlaceholderText("Password"), {
+  fireEvent.change(document.getElementById("password"), {
     target: { value: password },
   });
-  fireEvent.change(screen.getByPlaceholderText("Prénom"), {
+  fireEvent.change(document.getElementById("first_name"), {
     target: { value: firstName },
   });
-  fireEvent.change(screen.getByPlaceholderText("Nom"), {
+  fireEvent.change(document.getElementById("last_name"), {
     target: { value: lastName },
   });
 };
@@ -64,10 +76,10 @@ describe("Signup/Form", () => {
       renderForm();
 
       // ASSERT
-      expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Prénom")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Nom")).toBeInTheDocument();
+      expect(document.getElementById("email")).toBeInTheDocument();
+      expect(document.getElementById("password")).toBeInTheDocument();
+      expect(document.getElementById("first_name")).toBeInTheDocument();
+      expect(document.getElementById("last_name")).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: "S'inscrire" }),
       ).toBeInTheDocument();
@@ -83,10 +95,10 @@ describe("Signup/Form", () => {
       fillForm();
 
       // ASSERT
-      expect(screen.getByPlaceholderText("Email").value).toBe("test@test.com");
-      expect(screen.getByPlaceholderText("Password").value).toBe("password123");
-      expect(screen.getByPlaceholderText("Prénom").value).toBe("John");
-      expect(screen.getByPlaceholderText("Nom").value).toBe("Doe");
+      expect(document.getElementById("email").value).toBe("test@test.com");
+      expect(document.getElementById("password").value).toBe("password123");
+      expect(document.getElementById("first_name").value).toBe("John");
+      expect(document.getElementById("last_name").value).toBe("Doe");
     });
   });
 

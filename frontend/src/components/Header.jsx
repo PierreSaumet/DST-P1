@@ -64,6 +64,7 @@ function Header() {
             </div>
           ) : (
             <button
+              role="logout"
               className="dark:bg-main-text mx-4 transform cursor-pointer rounded-lg border-2 border-black px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
               onClick={logout}
             >

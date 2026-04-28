@@ -23,7 +23,7 @@
     },
     "articleDetail": {
         "articleNotFound": "Article introuvable",
-        "author": "Author"
+        "author": "Auteur"
     },
     "articles": {
         "title": "Liste des Articles",

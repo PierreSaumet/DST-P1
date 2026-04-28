@@ -138,6 +138,7 @@ function Profile() {
       />
 
       <button
+        id="logout"
         className="dark:bg-main-text mx-4 mt-10 transform cursor-pointer rounded-lg border-2 border-black px-4 py-2 transition duration-300 ease-in-out hover:scale-110"
         onClick={logout}
       >

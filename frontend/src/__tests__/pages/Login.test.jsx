@@ -7,6 +7,20 @@ vi.mock("../../components/Login/Form", () => ({
   default: () => <div>Form</div>,
 }));
 
+vi.mock("../../components/LanguageContext", () => ({
+  useLanguage: () => ({
+    t: {
+      login: {
+        login: "Se connecter",
+        forgotPwd: "Mot de passe oublié ?",
+        noAccount: "Vous n’avez pas de compte ? Vous pouvez en",
+        noAccount2: "créer un.",
+      },
+      email: "Email",
+    },
+  }),
+}));
+
 describe("Login", () => {
   it("renders without crashing", () => {
     render(
