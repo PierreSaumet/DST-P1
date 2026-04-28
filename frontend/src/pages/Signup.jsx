@@ -6,6 +6,7 @@ import axios from "axios";
 
 function Signup() {
   const { t } = useLanguage();
+  const truc = `${import.meta.env.VITE_API_URL}/auth/github/`;
   const handleGithubLogin = () => {
     window.location.href = `http://127.0.0.1:8000/api/auth/github/`;
   };
@@ -34,6 +35,8 @@ function Signup() {
           {t.signup.signup}
         </h2>
       </div>
+
+      <p> truc = {truc}</p>
 
       <FormSignUp />
 
