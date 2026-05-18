@@ -1,7 +1,5 @@
-import axios from "axios";
-
 import { useState, useEffect } from "react";
-import { useUser } from "../UserContext";
+import { api, useUser } from "../UserContext";
 import { useLanguage } from "../LanguageContext";
 
 function ContactForm() {
@@ -27,27 +25,13 @@ function ContactForm() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        setError("Vous devez vous identifiez");
-        return;
-      }
       setError("");
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/satisfactions/`,
-        {
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          description,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const response = await api.post(`/satisfactions/`, {
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        description,
+      });
       if (response.status === 201) {
         const data = response.data;
 
@@ -147,7 +131,10 @@ function ContactForm() {
             </div>
           </div>
 
-          <button className="bg-main-text my-10 transform rounded-lg px-8 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:scale-110">
+          <button
+            type="submit"
+            className="bg-main-text my-10 transform rounded-lg px-8 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:scale-110"
+          >
             {t.contactBtn}
           </button>
         </form>

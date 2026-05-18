@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
+import { api, useUser } from "../components/UserContext";
 import { useLanguage } from "../components/LanguageContext";
 
 function AuthCallback() {
@@ -12,17 +12,18 @@ function AuthCallback() {
     const run = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
-        const access = params.get("access_token");
+        const code = params.get("code");
 
-        if (!access) {
-          navigate(`/login?error=token_failed`);
+        if (!code) {
+          navigate("/login?error=token_failed");
           return;
         }
 
-        saveAccessToken(access);
-        await fetchUser(access);
+        const { data } = await api.post("/auth/exchange/", { code });
 
         window.history.replaceState(null, "", "/auth/callback");
+        saveAccessToken(data.access);
+        await fetchUser(data.access);
         navigate("/profile");
       } catch (err) {
         console.error("Erreur dans AuthCallback:", err);

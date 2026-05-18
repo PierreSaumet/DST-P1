@@ -70,13 +70,14 @@
     "signup": {
         "signup": "S'inscrire",
         "forgotPwd": "Mot de passe oublié ?",
-        "github": "Se connecter avec GitHub"
+        "github": "S'inscrire avec GitHub"
     },
     "login": {
         "login": "Se connecter",
         "forgotPwd": "Mot de passe oublié ?",
         "noAccount": "Vous n’avez pas de compte ? Vous pouvez en",
-        "noAccount2": "créer un."
+        "noAccount2": "créer un.",
+        "github": "Se connecter avec GitHub"
     },
     "profile": {
         "articleCreated": "Article créé avec succès !",

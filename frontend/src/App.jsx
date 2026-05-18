@@ -10,6 +10,8 @@ import Signup from "./pages/Signup";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
 import AuthCallback from "./pages/Callback";
+import ResetPassword from "./pages/ResetPassword";
+import ResetPasswordCallback from "./pages/ResetPasswordCallback";
 
 // Define children routes
 const router = createBrowserRouter([
@@ -43,12 +45,20 @@ const router = createBrowserRouter([
         element: <Articles />,
       },
       {
+        path: "resetpwd",
+        element: <ResetPassword />,
+      },
+      {
         path: "articles/:id",
         element: <ArticleDetail />,
       },
       {
         path: "auth/callback",
         element: <AuthCallback />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPasswordCallback />,
       },
     ],
   },

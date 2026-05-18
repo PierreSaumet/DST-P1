@@ -1,14 +1,14 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, beforeEach, describe, it, expect } from "vitest";
-import axios from "axios";
 import ContactForm from "../../../components/Contact/Form";
 import * as UserContext from "../../../components/UserContext";
 import * as LanguageContext from "../../../components/LanguageContext";
 
-vi.mock("axios");
-
 vi.mock("../../../components/UserContext", () => ({
   useUser: vi.fn(),
+  api: {
+    post: vi.fn(),
+  },
 }));
 
 vi.mock("../../../components/LanguageContext", () => ({
@@ -76,7 +76,7 @@ describe("Contact/Form", () => {
       // ARRANGE
       localStorage.setItem("access_token", "valid-token");
       const apiError = { response: { data: { detail: "Server error" } } };
-      axios.post.mockRejectedValueOnce(apiError);
+      UserContext.api.post.mockRejectedValueOnce(apiError);
       const consoleSpy = vi
         .spyOn(console, "error")
         .mockImplementation(() => {});
@@ -150,27 +150,10 @@ describe("Contact/Form", () => {
   });
 
   describe("handleSubmit", () => {
-    it("shows error message if no token in localStorage", async () => {
-      // ARRANGE
-      renderForm();
-      fillForm();
-
-      // ACT
-      submitForm();
-
-      // ASSERT
-      await waitFor(() => {
-        expect(
-          screen.getByText("Vous devez vous identifiez"),
-        ).toBeInTheDocument();
-      });
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-
-    it("calls axios.post with correct payload when token exists", async () => {
+    it("calls UserContext.api.post with correct payload when token exists", async () => {
       // ARRANGE
       localStorage.setItem("access_token", "valid-token");
-      axios.post.mockResolvedValueOnce({
+      UserContext.api.post.mockResolvedValueOnce({
         status: 201,
         data: { polarity: true },
       });
@@ -182,28 +165,19 @@ describe("Contact/Form", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith(
-          expect.stringContaining("/satisfactions/"),
-          {
-            email: "john@test.com",
-            first_name: "John",
-            last_name: "Doe",
-            description: "Hello!",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer valid-token",
-            },
-          },
-        );
+        expect(UserContext.api.post).toHaveBeenCalledWith("/satisfactions/", {
+          email: "john@test.com",
+          first_name: "John",
+          last_name: "Doe",
+          description: "Hello!",
+        });
       });
     });
 
     it("shows positive satisfaction message on success with polarity true", async () => {
       // ARRANGE
       localStorage.setItem("access_token", "valid-token");
-      axios.post.mockResolvedValueOnce({
+      UserContext.api.post.mockResolvedValueOnce({
         status: 201,
         data: { polarity: true },
       });
@@ -229,7 +203,7 @@ describe("Contact/Form", () => {
     it("shows negative satisfaction message on success with polarity false", async () => {
       // ARRANGE
       localStorage.setItem("access_token", "valid-token");
-      axios.post.mockResolvedValueOnce({
+      UserContext.api.post.mockResolvedValueOnce({
         status: 201,
         data: { polarity: false },
       });
@@ -255,7 +229,7 @@ describe("Contact/Form", () => {
     it("shows alert on API error", async () => {
       // ARRANGE
       localStorage.setItem("access_token", "valid-token");
-      axios.post.mockRejectedValueOnce(new Error("Server error"));
+      UserContext.api.post.mockRejectedValueOnce(new Error("Server error"));
       const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
       renderForm();
       fillForm();

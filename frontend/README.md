@@ -14,6 +14,9 @@ If you are developing a production application, we recommend using TypeScript wi
 test :
 npm run test:coverage
 
+npm run test -- src/**tests**/pages/ErrorPage.test.jsx
+npm run test -- src/**tests**/pages/
+
 npm run test:coverage -- -t "calls login with email and password on form submit"
 
 npm run test:coverage -- src/**tests**/pages/ErrorPage.test.jsx

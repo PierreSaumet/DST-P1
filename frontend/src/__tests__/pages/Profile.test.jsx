@@ -4,8 +4,6 @@ import { MemoryRouter } from "react-router-dom";
 import * as UserContext from "../../components/UserContext";
 import Profile from "../../pages/Profile";
 
-// ─── Global mocks ─────────────────────────────────────────────────────────────
-
 vi.mock("../../components/UserContext", () => ({
   useUser: vi.fn(),
 }));
@@ -52,8 +50,6 @@ vi.mock("../../components/LanguageContext", () => ({
   }),
 }));
 
-// ─── Fixtures ─────────────────────────────────────────────────────────────────
-
 const mockLogout = vi.fn();
 
 const mockUser = {
@@ -81,14 +77,8 @@ const mockLikes = [
   },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-/**
- * Build a mock `api` object.
- * By default: articles and likes resolve successfully.
- */
 const makeMockApi = ({
   articlesData = { results: mockArticles },
   likesData = mockLikes,
@@ -110,10 +100,6 @@ const makeMockApi = ({
   }),
 });
 
-/**
- * Configure useUser mock and render Profile.
- * Waits for all pending promises so the component is fully loaded.
- */
 const renderProfile = async (userOverrides = {}, apiOverrides = {}) => {
   const api = makeMockApi(apiOverrides);
 
@@ -139,17 +125,11 @@ const renderProfile = async (userOverrides = {}, apiOverrides = {}) => {
   return { ...result, api };
 };
 
-// ─── Setup ────────────────────────────────────────────────────────────────────
-
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
-
 describe("Profile", () => {
-  // ── Loading / redirects ────────────────────────────────────────────────────
-
   describe("loading and redirect states", () => {
     it("shows a loading indicator while initializing", () => {
       UserContext.useUser.mockReturnValue({
@@ -209,8 +189,6 @@ describe("Profile", () => {
     });
   });
 
-  // ── User info ─────────────────────────────────────────────────────────────
-
   describe("user info", () => {
     it("renders the user's full name", async () => {
       await renderProfile();
@@ -233,8 +211,6 @@ describe("Profile", () => {
       expect(mockLogout).toHaveBeenCalledTimes(1);
     });
   });
-
-  // ── API calls ─────────────────────────────────────────────────────────────
 
   describe("API calls on mount", () => {
     it("fetches articles for the logged-in user", async () => {
@@ -299,11 +275,8 @@ describe("Profile", () => {
     });
   });
 
-  // ── Articles section ───────────────────────────────────────────────────────
-
   describe("articles section", () => {
     it("shows a loading state while articles are being fetched", () => {
-      // api.get never resolves → loadingArticles stays true
       const api = {
         get: vi.fn(() => new Promise(() => {})),
       };
@@ -364,8 +337,6 @@ describe("Profile", () => {
     });
   });
 
-  // ── Create article ─────────────────────────────────────────────────────────
-
   describe("onArticleCreated", () => {
     it("prepends the new article to the list", async () => {
       await renderProfile();
@@ -387,8 +358,6 @@ describe("Profile", () => {
       expect(screen.queryByText("No articles yet.")).not.toBeInTheDocument();
     });
   });
-
-  // ── Likes / activity section ───────────────────────────────────────────────
 
   describe("likes / activity section", () => {
     it("shows a loading state while likes are being fetched", () => {
@@ -419,19 +388,59 @@ describe("Profile", () => {
 
     it("shows the total number of likes", async () => {
       await renderProfile();
-      // 2 likes → "❤️ 2 articles likeds"
       expect(screen.getByText(/❤️ 2/)).toBeInTheDocument();
     });
 
     it("shows the most recently liked article", async () => {
       await renderProfile();
-      // lastLiked is sorted by created_at desc → Article B (2024-03-01)
-      expect(screen.getByText("Article B")).toBeInTheDocument();
+      expect(
+        screen.getByText("Last liked article:").closest("div"),
+      ).toHaveTextContent("Article B");
     });
 
     it("shows a message when likes fetch fails", async () => {
       await renderProfile({}, { likesError: new Error("fail") });
       expect(screen.getByText("No liked articles yet.")).toBeInTheDocument();
+    });
+  });
+  describe("likes count display", () => {
+    it("shows singular form when only 1 article liked", async () => {
+      await renderProfile(
+        {},
+        {
+          likesData: [
+            {
+              id: 1,
+              article: { title: "Article A" },
+              created_at: "2024-01-01",
+            },
+          ],
+        },
+      );
+
+      expect(screen.getByText(/❤️/)).toHaveTextContent("❤️ 1 article liked");
+    });
+
+    it("shows plural form when multiple articles liked", async () => {
+      await renderProfile(
+        {},
+        {
+          likesData: [
+            {
+              id: 1,
+              article: { title: "Article A" },
+              created_at: "2024-01-01",
+            },
+            {
+              id: 2,
+              article: { title: "Article B" },
+              created_at: "2024-03-01",
+            },
+          ],
+        },
+      );
+
+      expect(screen.getByText(/❤️/)).toHaveTextContent("❤️ 2 articles likeds");
     });
   });
 });

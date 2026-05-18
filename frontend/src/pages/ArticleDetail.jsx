@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { useLanguage } from "../components/LanguageContext";
 import { useUser } from "../components/UserContext";
 import ReactMarkdown from "react-markdown";
@@ -20,9 +19,7 @@ function ArticleDetail() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/articles/${id}/`,
-        );
+        const response = await api.get(`/articles/${id}/`);
         setArticle(response.data);
       } catch (err) {
         console.error("Erreur lors du chargement de l'article :", err);
@@ -62,8 +59,6 @@ function ArticleDetail() {
   }, [user, article]);
 
   const handleLike = async () => {
-    if (!user) return;
-
     try {
       await api.post(`likes/${article.id}/toggle/`);
 
