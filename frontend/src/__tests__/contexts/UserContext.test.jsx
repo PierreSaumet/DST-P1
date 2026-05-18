@@ -10,6 +10,10 @@ vi.mock("axios", () => {
     get: mockGet,
     post: mockPost,
     interceptors: {
+      request: {
+        use: vi.fn(),
+        eject: vi.fn(),
+      },
       response: {
         use: vi.fn(),
         eject: vi.fn(),
@@ -62,6 +66,10 @@ describe("UserContext", () => {
     mockPost = axios.post;
     mockInterceptorUse = apiInstance.interceptors.response.use;
 
+    mockGet.mockReset();
+    mockPost.mockReset();
+
+    mockPost.mockResolvedValue({ data: {} });
     mockGet.mockResolvedValue({ data: null });
   });
 
@@ -74,12 +82,11 @@ describe("UserContext", () => {
     it("returns true and exposes the user if credentials are correct", async () => {
       // ARRANGE
       const mockUser = { id: 1, email: "test@test.com" };
+      mockPost.mockResolvedValueOnce({ data: {} });
       mockPost.mockResolvedValueOnce({
         data: { access: "access-token", refresh: "refresh-token" },
       });
-      mockGet
-        .mockResolvedValueOnce({ data: mockUser })
-        .mockResolvedValueOnce({ data: mockUser });
+      mockGet.mockResolvedValueOnce({ data: mockUser });
 
       renderWithProvider();
 
@@ -99,6 +106,7 @@ describe("UserContext", () => {
 
     it("returns false if credentials are incorrect", async () => {
       // ARRANGE
+      mockPost.mockResolvedValueOnce({ data: {} });
       mockPost.mockRejectedValueOnce(new Error("Unauthorized"));
       let loginResult;
 
@@ -129,33 +137,12 @@ describe("UserContext", () => {
       // ASSERT
       expect(loginResult).toBe(false);
     });
-
-    it("saves tokens in localStorage after login", async () => {
-      // ARRANGE
-      mockPost.mockResolvedValueOnce({
-        data: { access: "access-token", refresh: "refresh-token" },
-      });
-      mockGet.mockResolvedValueOnce({ data: { id: 1 } });
-
-      renderWithProvider();
-
-      // ACT
-      await act(async () => {
-        screen.getByText("Login").click();
-      });
-
-      // ASSERT
-      await waitFor(() => {
-        expect(localStorage.getItem("access_token")).toBe("access-token");
-        expect(localStorage.getItem("refresh_token")).toBe("refresh-token");
-      });
-    });
   });
 
   describe("logout", () => {
     it("resets user and token to null and clears localStorage", async () => {
       // ARRANGE
-      localStorage.setItem("access_token", "access-token");
+      mockPost.mockResolvedValueOnce({ data: { access: "access-token" } });
       mockGet.mockResolvedValueOnce({ data: { id: 1 } });
 
       renderWithProvider();
@@ -172,8 +159,6 @@ describe("UserContext", () => {
       // ASSERT
       expect(screen.getByTestId("user").textContent).toBe("null");
       expect(screen.getByTestId("token").textContent).toBe("null");
-      expect(localStorage.getItem("access_token")).toBeNull();
-      expect(localStorage.getItem("refresh_token")).toBeNull();
     });
   });
 
@@ -181,8 +166,11 @@ describe("UserContext", () => {
     it("fetches and exposes the user if a token is present on mount", async () => {
       // ARRANGE
       const mockUser = { id: 1, email: "test@test.com" };
-      localStorage.setItem("access_token", "access-token");
-      mockGet.mockResolvedValueOnce({ data: mockUser });
+      mockPost.mockResolvedValueOnce({ data: { access: "access-token" } });
+
+      mockGet
+        .mockResolvedValueOnce({ data: mockUser })
+        .mockResolvedValueOnce({ data: mockUser }); // FORCE MOCK
 
       // ACT
       renderWithProvider();
@@ -213,7 +201,7 @@ describe("UserContext", () => {
   describe("refreshAccessToken", () => {
     it("clears tokens if no refresh token is in localStorage", async () => {
       // ARRANGE
-      localStorage.setItem("access_token", "access-token");
+      mockPost.mockResolvedValueOnce({ data: { access: "access-token" } });
       mockGet.mockResolvedValueOnce({ data: { id: 1 } });
       renderWithProvider();
       await waitFor(() =>
@@ -233,16 +221,19 @@ describe("UserContext", () => {
       });
 
       // ASSERT
-      expect(localStorage.getItem("access_token")).toBeNull();
-      expect(localStorage.getItem("refresh_token")).toBeNull();
+      await waitFor(() => {
+        expect(screen.getByTestId("token").textContent).toBe("null");
+        expect(screen.getByTestId("user").textContent).toBe("null");
+      });
     });
 
     it("refreshes the token and retries the request if refresh token is valid", async () => {
       // ARRANGE
-      localStorage.setItem("access_token", "old-access-token");
-      localStorage.setItem("refresh_token", "valid-refresh-token");
+      mockPost.mockResolvedValueOnce({ data: { access: "old-access-token" } });
       mockGet.mockResolvedValueOnce({ data: { id: 1 } });
+
       renderWithProvider();
+
       await waitFor(() =>
         expect(screen.getByTestId("token").textContent).toBe(
           "old-access-token",
@@ -250,6 +241,7 @@ describe("UserContext", () => {
       );
 
       const errorHandler = getInterceptorErrorHandler();
+
       mockPost.mockResolvedValueOnce({ data: { access: "new-access-token" } });
       const originalRequest = { _retry: false, headers: {} };
 
@@ -265,7 +257,9 @@ describe("UserContext", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(localStorage.getItem("access_token")).toBe("new-access-token");
+        expect(screen.getByTestId("token").textContent).toBe(
+          "new-access-token",
+        );
         expect(originalRequest.headers["Authorization"]).toBe(
           "Bearer new-access-token",
         );
@@ -274,10 +268,11 @@ describe("UserContext", () => {
 
     it("clears tokens if the refresh token is expired", async () => {
       // ARRANGE
-      localStorage.setItem("access_token", "old-access-token");
-      localStorage.setItem("refresh_token", "expired-refresh-token");
+      mockPost.mockResolvedValueOnce({ data: { access: "old-access-token" } });
       mockGet.mockResolvedValueOnce({ data: { id: 1 } });
+
       renderWithProvider();
+
       await waitFor(() =>
         expect(screen.getByTestId("token").textContent).toBe(
           "old-access-token",
@@ -285,6 +280,7 @@ describe("UserContext", () => {
       );
 
       const errorHandler = getInterceptorErrorHandler();
+
       mockPost.mockRejectedValueOnce(new Error("Refresh token expired"));
 
       // ACT
@@ -301,8 +297,8 @@ describe("UserContext", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(localStorage.getItem("access_token")).toBeNull();
-        expect(localStorage.getItem("refresh_token")).toBeNull();
+        expect(screen.getByTestId("token").textContent).toBe("null");
+        expect(screen.getByTestId("user").textContent).toBe("null");
       });
     });
 
@@ -320,32 +316,11 @@ describe("UserContext", () => {
     it("uses accessToken as priority if provided", async () => {
       // ARRANGE
       const mockUser = { id: 1, email: "test@test.com" };
-      // different token in localstorage to test
-      localStorage.setItem("access_token", "token-from-storage");
-      mockGet
-        .mockResolvedValueOnce({ data: mockUser })
-        .mockResolvedValueOnce({ data: mockUser });
 
-      renderWithProvider();
-      await waitFor(() =>
-        expect(screen.getByTestId("user").textContent).not.toBe("null"),
-      );
-
-      const { fetchUser } = screen.getByTestId("user").__reactFiber
-        ? (() => {
-            let ctx;
-            const TestFetchUser = () => {
-              ctx = useUser();
-              return null;
-            };
-            render(
-              <UserProvider>
-                <TestFetchUser />
-              </UserProvider>,
-            );
-            return ctx;
-          })()
-        : {};
+      mockPost.mockResolvedValueOnce({
+        data: { access: "token-from-refresh" },
+      });
+      mockGet.mockResolvedValueOnce({ data: mockUser });
 
       let capturedFetchUser;
       const TestCapture = () => {
@@ -354,12 +329,14 @@ describe("UserContext", () => {
         return null;
       };
 
-      mockGet.mockResolvedValueOnce({ data: mockUser });
       render(
         <UserProvider>
           <TestCapture />
         </UserProvider>,
       );
+
+      await waitFor(() => expect(mockGet).toHaveBeenCalledTimes(1));
+      mockGet.mockResolvedValueOnce({ data: mockUser });
 
       // ACT
       await act(async () => {
@@ -367,8 +344,7 @@ describe("UserContext", () => {
       });
 
       // ASSERT
-      const calls = mockGet.mock.calls;
-      const lastCall = calls[calls.length - 1];
+      const lastCall = mockGet.mock.calls[mockGet.mock.calls.length - 1];
       expect(lastCall[1].headers.Authorization).toBe(
         "Bearer explicit-access-token",
       );
@@ -377,7 +353,10 @@ describe("UserContext", () => {
     it("uses tokenRef.current if accessToken is not provided", async () => {
       // ARRANGE
       const mockUser = { id: 1, email: "test@test.com" };
-      localStorage.setItem("access_token", "token-from-storage");
+
+      mockPost.mockResolvedValueOnce({
+        data: { access: "token-from-somewhere" },
+      });
       mockGet.mockResolvedValueOnce({ data: mockUser });
 
       let capturedFetchUser;
@@ -405,7 +384,7 @@ describe("UserContext", () => {
       const calls = mockGet.mock.calls;
       const lastCall = calls[calls.length - 1];
       expect(lastCall[1].headers.Authorization).toBe(
-        "Bearer token-from-storage",
+        "Bearer token-from-somewhere",
       );
     });
 
@@ -441,6 +420,67 @@ describe("UserContext", () => {
       });
 
       // ASSERT
+      expect(mockGet).not.toHaveBeenCalled();
+    });
+
+    it("sets user to null if fetchUser api call fails", async () => {
+      // ARRANGE
+      mockPost.mockResolvedValueOnce({ data: { access: "access-token" } });
+      mockGet.mockRejectedValueOnce(new Error("Server error"));
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      // ACT
+      renderWithProvider();
+
+      // ASSERT
+      await waitFor(() => {
+        expect(screen.getByTestId("user").textContent).toBe("null");
+        expect(consoleSpy).toHaveBeenCalledWith(
+          "Error while retrieving user:",
+          expect.any(Error),
+        );
+      });
+
+      consoleSpy.mockRestore();
+    });
+
+    it("injects Authorization header via request interceptor when token is present", async () => {
+      // ARRANGE
+      const apiInstance = getApiInstance();
+      const requestInterceptorUse = apiInstance.interceptors.request.use;
+
+      mockPost.mockResolvedValueOnce({ data: { access: "access-token" } });
+      mockGet.mockResolvedValueOnce({ data: { id: 1 } });
+
+      renderWithProvider();
+
+      await waitFor(() =>
+        expect(screen.getByTestId("token").textContent).toBe("access-token"),
+      );
+
+      // ACT
+      const requestHandler = requestInterceptorUse.mock.calls[0][0];
+      const config = { headers: {} };
+      const result = requestHandler(config);
+
+      // ASSERT
+      expect(result.headers.Authorization).toBe("Bearer access-token");
+    });
+
+    it("skips refresh on mount if pathname is /auth/callback", async () => {
+      // ARRANGE
+      delete window.location;
+      window.location = { pathname: "/auth/callback" };
+
+      // ACT
+      renderWithProvider();
+
+      await act(async () => {});
+
+      // ASSERT
+      expect(mockPost).not.toHaveBeenCalled();
       expect(mockGet).not.toHaveBeenCalled();
     });
   });

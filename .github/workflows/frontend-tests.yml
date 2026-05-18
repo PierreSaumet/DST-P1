@@ -1,0 +1,27 @@
+name: Run Frontend Tests
+
+on: [push, pull_request]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run tests
+        working-directory: frontend
+        env:
+          CI: "true"
+          VITE_API_URL: "/api"
+          VITE_GITHUB_CALL: "http://127.0.0.1:8000/api/auth/github/"
+        run: npm run test

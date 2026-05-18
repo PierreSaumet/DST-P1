@@ -70,13 +70,14 @@
     "signup": {
         "signup": "Sign up",
         "forgotPwd": "Forgot your password?",
-        "github": "Sing in with GithHub"
+        "github": "Sign up with GithHub"
     },
     "login": {
         "login": "Log in",
         "forgotPwd": "Forgot your password?",
         "noAccount": "Don't have an account? You can",
-        "noAccount2": "create one."
+        "noAccount2": "create one.",
+        "github": "Log in with GithHub"
     },
     "profile": {
         "articleCreated": "Article successfully created!",

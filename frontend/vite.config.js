@@ -26,7 +26,8 @@ export default defineConfig({
         "src/main.jsx",
         "src/Layout.jsx",
         "src/App.jsx",
-        "*.config.js"
+        "*.config.js",
+        "dist/"
       ],
     }
   },

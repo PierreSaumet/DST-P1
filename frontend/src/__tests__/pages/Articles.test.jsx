@@ -1,12 +1,16 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, beforeEach, describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import axios from "axios";
 import Articles from "../../pages/Articles";
-
-vi.mock("axios");
+import * as UserContext from "../../components/UserContext";
 
 const mockNavigate = vi.fn();
+
+vi.mock("../../components/UserContext", () => ({
+  api: {
+    get: vi.fn(),
+  },
+}));
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -27,6 +31,7 @@ vi.mock("../../components/LanguageContext", () => ({
       search: "Rechercher",
       previous: "Précédent",
       next: "Suivant",
+      articleDetail: { author: "Auteur" },
     },
   }),
 }));
@@ -63,7 +68,7 @@ describe("Articles", () => {
   describe("rendering", () => {
     it("shows loading state on mount", () => {
       // ARRANGE
-      axios.get.mockReturnValueOnce(new Promise(() => {}));
+      UserContext.api.get.mockReturnValueOnce(new Promise(() => {}));
 
       // ACT
       renderArticles();
@@ -76,7 +81,7 @@ describe("Articles", () => {
 
     it("renders articles list after successful fetch", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: mockArticles, next: null, previous: null },
       });
 
@@ -92,7 +97,7 @@ describe("Articles", () => {
 
     it("shows error message if fetch fails", async () => {
       // ARRANGE
-      axios.get.mockRejectedValueOnce(new Error("Network error"));
+      UserContext.api.get.mockRejectedValueOnce(new Error("Network error"));
 
       // ACT
       renderArticles();
@@ -108,7 +113,7 @@ describe("Articles", () => {
     it("logs error to console if fetch fails", async () => {
       // ARRANGE
       const err = new Error("Network error");
-      axios.get.mockRejectedValueOnce(err);
+      UserContext.api.get.mockRejectedValueOnce(err);
       const consoleSpy = vi
         .spyOn(console, "error")
         .mockImplementation(() => {});
@@ -131,7 +136,7 @@ describe("Articles", () => {
   describe("pagination", () => {
     it("disables previous button when no previous page", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: "http://api/articles/?page=2",
@@ -152,7 +157,7 @@ describe("Articles", () => {
 
     it("disables next button when no next page", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: null,
@@ -171,7 +176,7 @@ describe("Articles", () => {
 
     it("fetches next page on next button click", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: "http://api/articles/?page=2",
@@ -181,7 +186,7 @@ describe("Articles", () => {
       renderArticles();
       await waitFor(() => screen.getByText("Article 1"));
 
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: null,
@@ -194,16 +199,18 @@ describe("Articles", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          "http://api/articles/?page=2",
-          expect.any(Object),
+        expect(UserContext.api.get).toHaveBeenCalledWith(
+          "/articles/",
+          expect.objectContaining({
+            params: { search: "http://api/articles/?page=2" },
+          }),
         );
       });
     });
 
     it("fetches previous page on previous button click", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: null,
@@ -213,7 +220,7 @@ describe("Articles", () => {
       renderArticles();
       await waitFor(() => screen.getByText("Article 1"));
 
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: {
           results: mockArticles,
           next: "http://api/articles/?page=2",
@@ -226,16 +233,18 @@ describe("Articles", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          "http://api/articles/?page=1",
-          expect.any(Object),
+        expect(UserContext.api.get).toHaveBeenCalledWith(
+          "/articles/",
+          expect.objectContaining({
+            params: { search: "http://api/articles/?page=1" },
+          }),
         );
       });
     });
 
     it("does not fetch if next page is null on next button click", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: mockArticles, next: null, previous: null },
       });
       renderArticles();
@@ -245,12 +254,12 @@ describe("Articles", () => {
       fireEvent.click(screen.getByRole("button", { name: "Suivant" }));
 
       // ASSERT
-      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(UserContext.api.get).toHaveBeenCalledTimes(1);
     });
 
     it("does not fetch if previous page is null on previous button click", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: mockArticles, next: null, previous: null },
       });
       renderArticles();
@@ -260,20 +269,20 @@ describe("Articles", () => {
       fireEvent.click(screen.getByRole("button", { name: "Précédent" }));
 
       // ASSERT
-      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(UserContext.api.get).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("handleSearch", () => {
     it("fetches articles with search query on form submit", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: mockArticles, next: null, previous: null },
       });
       renderArticles();
       await waitFor(() => screen.getByText("Article 1"));
 
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: [mockArticles[0]], next: null, previous: null },
       });
 
@@ -290,9 +299,9 @@ describe("Articles", () => {
 
       // ASSERT
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          expect.stringContaining("/articles/"),
-          { params: { search: "Article 1" } },
+        expect(UserContext.api.get).toHaveBeenCalledWith(
+          "/articles/",
+          expect.objectContaining({ params: { search: "Article 1" } }),
         );
       });
     });
@@ -301,7 +310,7 @@ describe("Articles", () => {
   describe("goToArticle", () => {
     it("navigates to article detail page on article click", async () => {
       // ARRANGE
-      axios.get.mockResolvedValueOnce({
+      UserContext.api.get.mockResolvedValueOnce({
         data: { results: mockArticles, next: null, previous: null },
       });
       renderArticles();

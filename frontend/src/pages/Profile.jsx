@@ -84,18 +84,19 @@ function Profile() {
           <p className="text-center text-gray-400">{t.loading}...</p>
         ) : likes.length === 0 ? (
           <p className="text-center text-gray-400">
+            {/* No likes  */}
             {t.profile.noArticleLiked}
           </p>
         ) : (
           <div className="flex flex-col gap-4 text-center">
-            {/* Nombre de likes */}
+            {/* Number of likes */}
             <p className="text-lg font-medium">
               ❤️ {likes.length} {t.article}
               {likes.length > 1 ? "s" : ""} {t.liked}
               {likes.length > 1 ? "s" : ""}
             </p>
 
-            {/* Dernier article liké */}
+            {/* Last article liked */}
             {lastLiked && (
               <div className="rounded-lg border border-gray-600 bg-gray-100 p-4 dark:bg-gray-700">
                 <p className="mb-2 text-sm text-gray-500">
