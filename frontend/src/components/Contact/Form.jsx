@@ -39,8 +39,13 @@ function ContactForm() {
         setSuccess(true);
       }
     } catch (error) {
-      console.error("Erreur d'inscription:", error.response?.data);
-      alert("Inscription ne fonctionne pas.");
+      console.error("Erreur dans le requete:", error.response?.data);
+      const explication = error.response?.data?.non_field_errors?.[0];
+      if (explication) {
+        alert(
+          `Il n'est pas possible de prendre en compte votre message .${explication}`,
+        );
+      }
     }
   };
   return (
