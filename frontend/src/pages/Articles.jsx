@@ -5,23 +5,25 @@ import { api } from "../components/UserContext";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
+
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { t } = useLanguage();
 
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
-  // Get all articles from the backend
-  const fetchArticles = async (query = "") => {
+  const fetchArticles = async (params = {}) => {
     setLoading(true);
     setError("");
 
     try {
       const response = await api.get("/articles/", {
-        params: query ? { search: query } : {},
+        params,
         withCredentials: true,
       });
 
@@ -29,7 +31,7 @@ function Articles() {
       setNextPage(response.data.next);
       setPrevPage(response.data.previous);
     } catch (err) {
-      console.error("Erreur lors du chargement des articles :", err);
+      console.error("Erreur chargement articles :", err);
       setError("Impossible de charger les articles.");
     } finally {
       setLoading(false);
@@ -40,20 +42,40 @@ function Articles() {
     fetchArticles();
   }, []);
 
-  // Make request based on the search input
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchArticles(search);
+
+    setActiveSearch(searchInput);
+
+    fetchArticles({
+      search: searchInput,
+    });
   };
 
-  // Next page
   const handleNextPage = () => {
-    if (nextPage) fetchArticles(nextPage);
+    if (!nextPage || loading) return;
+
+    const page = new URL(nextPage, window.location.origin).searchParams.get(
+      "page",
+    );
+
+    fetchArticles({
+      page,
+      search: activeSearch,
+    });
   };
 
-  // Prev page
   const handlePrevPage = () => {
-    if (prevPage) fetchArticles(prevPage);
+    if (!prevPage || loading) return;
+
+    const page = new URL(prevPage, window.location.origin).searchParams.get(
+      "page",
+    );
+
+    fetchArticles({
+      page,
+      search: activeSearch,
+    });
   };
 
   const goToArticle = (id) => {
@@ -69,8 +91,8 @@ function Articles() {
       <form onSubmit={handleSearch} className="mb-6 flex w-full max-w-lg">
         <input
           type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="focus:ring-main-text flex-1 rounded-l-lg border border-gray-300 p-2 text-lg focus:ring-2 focus:outline-none"
           placeholder={t.articles.placeholder}
         />
